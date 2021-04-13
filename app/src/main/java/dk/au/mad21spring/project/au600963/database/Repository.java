@@ -128,7 +128,6 @@ public class Repository {
         Gson gson = new GsonBuilder().create();
         Result result = gson.fromJson(json, Result.class);
         if(result != null){
-
             Recipe recipe = new Recipe(result.getTitle(), String.valueOf(result.getReadyInMinutes()), "test", result.getSummary(), result.getImage()); //result.getAnalyzedInstructions().get(0).getSteps()
 
             Log.d(TAG, "updated recipe: " + recipe.getName());
@@ -193,13 +192,18 @@ public class Repository {
     private void parseJson(String json) {
         Gson gson = new GsonBuilder().create();
 
-        //JSONObject resultsObject = json.ge;
+
+
         Result result = gson.fromJson(json, Result.class);
-
-        Log.d(TAG, "TITLE: " + result.getResults().get(0).getTitle());
-
         if(result != null){
-            Recipe recipe = new Recipe(result.getResults().get(0).getTitle(), String.valueOf(result.getResults().get(0).getReadyInMinutes()), "test", result.getResults().get(0).getSummary(), result.getResults().get(0).getImage());
+            String des = result.getResults().get(0).getSummary()
+                    .replaceAll("<b>", "")
+                    .replaceAll("</b>", "")
+                    .replaceAll("<a.*>", "")
+                    .replaceAll("To use.*for similar recipes.", "")
+                    .replaceAll("Try.*for similar recipes.", "");
+
+            Recipe recipe = new Recipe(result.getResults().get(0).getTitle(), String.valueOf(result.getResults().get(0).getReadyInMinutes()), "test", des, result.getResults().get(0).getImage());
 
             if(Exist(recipe)){
                 Toast.makeText(context, "The recipe is already in the list", Toast.LENGTH_SHORT).show();
