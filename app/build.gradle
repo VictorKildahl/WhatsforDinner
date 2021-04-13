@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "dk.au.mad21spring.assignment1.au600963"
+        applicationId "dk.au.mad21spring.project.au600963"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
