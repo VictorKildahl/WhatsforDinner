@@ -1,5 +1,6 @@
 package dk.au.mad21spring.project.au600963.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -10,10 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Button;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
@@ -30,7 +34,7 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
     private RecyclerView rcvRecipe;
     private RecipeAdapter adapter;
     private EditText edtSearch;
-    private Button btnAdd, btnMap;
+    private Button btnAdd, btnRandom;
     private RecipeViewModel rvm;
     private String recipeName;
     private List<Recipe> recipeList;
@@ -46,7 +50,7 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
         edtSearch = findViewById(R.id.edtSearch);
         rcvRecipe = findViewById(R.id.rcvRecipe);
         btnAdd = findViewById(R.id.btnAdd);
-        btnMap = findViewById(R.id.btnMap);
+        btnRandom = findViewById(R.id.btnRandom);
 
         //Setup recyclerview with adapter and layout manager
         adapter = new RecipeAdapter(this);
@@ -77,19 +81,37 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
         });
 
         //Handling what happens when clicking button "Map"
-        btnMap.setOnClickListener(new View.OnClickListener() {
+        btnRandom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mapIntent = new Intent(getApplicationContext(), MapsActivity.class);
-                if (userLocation != null) {
-                    //if location known, send it to the map activity
-                    mapIntent.putExtra(Constants.EXTRA_USER_LATITUDE, userLocation.getLatitude());
-                    mapIntent.putExtra(Constants.EXTRA_USER_LONGITUDE, userLocation.getLongitude());
+                rvm.getRandomRecipe();
+            }
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.recipes);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.recipes:
+                        return true;
+                    case R.id.map:
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
                 }
-                startActivity(mapIntent);
+                return false;
             }
         });
     }
+
+
 
     //Handling what happens when a Recipe is clicked
     @Override
@@ -111,9 +133,7 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
                 Recipe deleteRecipe = rvm.getRecipe(uid);
                 rvm.deleteRecipe(deleteRecipe);
                 Toast.makeText(this, "The recipe has been removed", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
-            }
+            } else { }
         }
     }
 }

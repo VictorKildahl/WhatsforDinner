@@ -66,7 +66,7 @@ public class ForegroundService extends Service {
         startForeground(Constants.NOTIFICATION_ID, notification);
 
         //This method starts recursive background work
-        doBackgroundStuff();
+        //doBackgroundStuff();
 
         //Returning START_STICKY will make the Service restart again eventually if it gets killed off (e.g. due to resources)
         return START_STICKY;

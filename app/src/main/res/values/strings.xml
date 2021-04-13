@@ -13,4 +13,9 @@
     <string name="imgRecipe">Recipe</string>
     <string name="txtHealthscore">Healthscore</string>
     <string name="btnMap">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_recipes">Recipes</string>
+    <string name="title_map">Map</string>
+    <string name="btnRandom">Random</string>
 </resources>

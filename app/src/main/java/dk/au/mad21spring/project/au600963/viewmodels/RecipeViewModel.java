@@ -22,6 +22,10 @@ public class RecipeViewModel extends AndroidViewModel {
         return repository.getRecipe(uid);
     }
 
+    public void getRandomRecipe() {
+        repository.getRandomRecipe();
+    }
+
     public LiveData<List<Recipe>> getRecipeList() {
         return repository.getRecipes();
     }

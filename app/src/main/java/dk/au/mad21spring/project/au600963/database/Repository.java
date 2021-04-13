@@ -96,7 +96,7 @@ public class Repository {
 
     //Makes the url to update the recipes in the list
     private void serviceLoadData(String recipeName) {
-        String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=fa4d67d553e14a638d11145e3db60a61&maxReadyTime=30&addRecipeInformation=true&number=1";
+        String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=fa4d67d553e14a638d11145e3db60a61&addRecipeInformation=true&number=1";
         serviceSendRequest(dataUrl);
     }
 
@@ -155,7 +155,9 @@ public class Repository {
 
     //Making URL to Weather API
     private void loadData(String recipeName) {
-        String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=fa4d67d553e14a638d11145e3db60a61&maxReadyTime=30&addRecipeInformation=true&number=1";
+        //kildahl 01: fa4d67d553e14a638d11145e3db60a61
+        //kildahl 02: bd2e943f6c2f411586df06712425fce9
+        String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=1";
         sendRequest(dataUrl);
     }
 
@@ -191,8 +193,6 @@ public class Repository {
     //Putting the data from api into arraylist
     private void parseJson(String json) {
         Gson gson = new GsonBuilder().create();
-
-
 
         Result result = gson.fromJson(json, Result.class);
         if(result != null){
@@ -236,6 +236,79 @@ public class Repository {
         }
         return found;
     }
+
+
+    /////////////Random recipe start//////////////
+    //Makes the url to update the recipes in the list
+    public void getRandomRecipe() {
+        //kildahl 01: fa4d67d553e14a638d11145e3db60a61
+        //kildahl 02: bd2e943f6c2f411586df06712425fce9
+        String randomdataUrl = "https://api.spoonacular.com/recipes/random?apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=3";
+        randomSendRequest(randomdataUrl);
+    }
+
+    //Makes the request to the Recipe API for the current cities
+    private void randomSendRequest(String dataUrl) {
+        if(queue == null){
+            queue = Volley.newRequestQueue(context);
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, dataUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response){
+                Log.d(Constants.TAG, "Random Recipe information: " + response);
+                randomParseJson(response);
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+                Log.e(Constants.TAG, "That did not work! Random", error);
+                Toast.makeText(context, "The recipe could not be found random", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
+    //Updates the current cities with the new data
+    private void randomParseJson(String json) {
+        Gson gson = new GsonBuilder().create();
+        Result randomresult = gson.fromJson(json, Result.class);
+        if(randomresult != null){
+            //Log.d(TAG, "NAME: "+ result.getResults().get(1).getTitle());
+            Log.d(TAG, "NAME: "+ randomresult.getTitle());
+
+            /*String des = result.getResults().get(0).getSummary()
+                    .replaceAll("<b>", "")
+                    .replaceAll("</b>", "")
+                    .replaceAll("<a.*>", "")
+                    .replaceAll("To use.*for similar recipes.", "")
+                    .replaceAll("Try.*for similar recipes.", "");*/
+
+            //Log.d(TAG, "DES: "+ des);
+            /*Recipe recipe = new Recipe(result.getResults().get(0).getTitle(), String.valueOf(result.getResults().get(0).getReadyInMinutes()), "test", des, result.getResults().get(0).getImage());
+
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    db.recipeDAO().addRecipe(recipe);
+                }
+            });*/
+        }
+    }
+    /////////////Random recipe end//////////////
+
+
+
+
+
+
+
+
+
+
+
+
 
     //Get clicked recipe
     public Recipe getRecipe(int uid){

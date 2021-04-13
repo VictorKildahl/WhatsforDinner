@@ -43,7 +43,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btnAdd" />
 
     <Button
-        android:id="@+id/btnMap"
+        android:id="@+id/btnRandom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
