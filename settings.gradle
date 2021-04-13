@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "au600963 City Weather 2"

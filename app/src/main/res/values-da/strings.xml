@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Opskrifts Projekt</string>
+    <string name="btnBack">Tilbage</string>
+    <string name="btnCancel">Fortryd</string>
+    <string name="btnOk">Ok</string>
+    <string name="btnAdd">Tilføj</string>
+    <string name="btnDelete">Slet</string>
+    <string name="edtSearch">Søg her</string>
+    <string name="txtRecipe">Opskrift</string>
+    <string name="txtTime">Forberedelsestid</string>
+    <string name="txtIngrediens">Ingredienser</string>
+    <string name="txtDescription">Beskrivelse</string>
+    <string name="imgRecipe">Opskrift</string>
+    <string name="txtHealthscore">Healthscore</string>
+    <string name="btnMap">Kort</string>
+</resources>
