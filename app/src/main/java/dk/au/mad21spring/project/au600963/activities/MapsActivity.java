@@ -1,59 +1,124 @@
 package dk.au.mad21spring.project.au600963.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 import dk.au.mad21spring.project.au600963.R;
 
-public class MapsActivity extends Fragment {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private Button btnZoomUser;
+    private Button btnMapType;
+    private Button btnShowExercise;
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        }
-    };
+    private double userLatitude;
+    private double userLongitude;
+    private boolean userLocationKnown = false;
+    private boolean tracing = true;
+    private boolean showingExercises = false;
 
-    @Nullable
+    private int mapType = GoogleMap.MAP_TYPE_NORMAL;
+
+
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps_activity, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+
+        //Bottom Navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.map);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.recipes:
+                        startActivity(new Intent(getApplicationContext(), ListActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.map:
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        setUpMapIfNeeded();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
+    protected void onResume() {
+        super.onResume();
+        //LocalBroadcastManager.getInstance(this).registerReceiver(locationUpdateReceiver, new IntentFilter("LOCATION_UPDATE"));
+        setUpMapIfNeeded();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(locationUpdateReceiver);
+    }
+
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            //mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();   //this is the old way
+            ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);  //this is the new way
         }
     }
+
+    //the new asynch way of getting the map
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        // Check if we were successful in obtaining the map.
+        if (mMap != null) {
+            setUpMap();
+        }
+    }
+
+
+    private void setUpMap() {
+        if(userLocationKnown) {
+
+            if(!tracing && !showingExercises){
+                mMap.clear();   //if we are not tracking, remove the markers first
+            }
+            mMap.addMarker(new MarkerOptions().position(new LatLng(userLatitude, userLongitude)).title("You are here!"));
+        }
+    }
+
+
 }

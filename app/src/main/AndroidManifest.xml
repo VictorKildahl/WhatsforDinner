@@ -38,6 +38,7 @@
             android:enabled="true"
             android:exported="false" />
 
+        <activity android:name=".activities.MapsActivity" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.ListActivity" />
         <activity android:name=".activities.DetailsActivity" />

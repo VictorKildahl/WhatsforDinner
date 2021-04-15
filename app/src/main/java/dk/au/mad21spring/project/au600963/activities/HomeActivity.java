@@ -32,6 +32,7 @@ public class HomeActivity extends AppCompatActivity {
     private TextView txtUsername;
     private Button btnLogout;
     private Intent logindata;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         logindata = getIntent();
+        auth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
 
@@ -89,7 +91,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        //user.
         /*if(auth == null){
             //Firebase Auth
             auth = FirebaseAuth.getInstance();

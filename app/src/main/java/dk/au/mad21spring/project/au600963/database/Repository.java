@@ -205,6 +205,8 @@ public class Repository {
                     .replaceAll("To use.*for similar recipes.", "")
                     .replaceAll("Try.*for similar recipes.", "");
 
+            //String instruction = result.getResults().get(0).getAnalyzedInstructions();
+
             Recipe recipe = new Recipe(result.getResults().get(0).getTitle(), String.valueOf(result.getResults().get(0).getReadyInMinutes()), "test", des, result.getResults().get(0).getImage());
 
             if(Exist(recipe)){
