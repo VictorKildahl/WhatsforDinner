@@ -157,6 +157,7 @@ public class Repository {
     private void loadData(String recipeName) {
         //kildahl 01: fa4d67d553e14a638d11145e3db60a61
         //kildahl 02: bd2e943f6c2f411586df06712425fce9
+        recipeName = recipeName.replace(" ", "_");
         String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=1";
         sendRequest(dataUrl);
     }
@@ -193,9 +194,11 @@ public class Repository {
     //Putting the data from api into arraylist
     private void parseJson(String json) {
         Gson gson = new GsonBuilder().create();
-
         Result result = gson.fromJson(json, Result.class);
-        if(result != null){
+
+        if(result.getResults().size() == 0){
+            Toast.makeText(context, "The recipe was not found.", Toast.LENGTH_SHORT).show();
+        } else {
             String des = result.getResults().get(0).getSummary()
                     .replaceAll("<b>", "")
                     .replaceAll("</b>", "")
