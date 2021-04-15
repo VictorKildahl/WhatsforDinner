@@ -1,10 +1,12 @@
 
-package dk.au.mad21spring.project.au600963.model;
+package dk.au.mad21spring.project.au600963.model.recipe;
+
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Equipment {
+
+public class Ingredient {
 
     @SerializedName("id")
     @Expose

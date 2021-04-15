@@ -1,5 +1,5 @@
 
-package dk.au.mad21spring.project.au600963.model;
+package dk.au.mad21spring.project.au600963.model.recipe;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

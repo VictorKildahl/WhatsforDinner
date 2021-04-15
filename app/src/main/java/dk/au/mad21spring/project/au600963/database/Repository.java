@@ -16,8 +16,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONObject;
-
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +25,8 @@ import java.util.concurrent.Future;
 
 import dk.au.mad21spring.project.au600963.constants.Constants;
 import dk.au.mad21spring.project.au600963.model.Recipe;
-import dk.au.mad21spring.project.au600963.model.Result;
+import dk.au.mad21spring.project.au600963.model.randomrecipe.RandomRecipe;
+import dk.au.mad21spring.project.au600963.model.recipe.Result;
 
 public class Repository {
 
@@ -246,7 +245,7 @@ public class Repository {
     public void getRandomRecipe() {
         //kildahl 01: fa4d67d553e14a638d11145e3db60a61
         //kildahl 02: bd2e943f6c2f411586df06712425fce9
-        String randomdataUrl = "https://api.spoonacular.com/recipes/random?apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=3";
+        String randomdataUrl = "https://api.spoonacular.com/recipes/random?apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=1";
         randomSendRequest(randomdataUrl);
     }
 
@@ -273,30 +272,29 @@ public class Repository {
         queue.add(stringRequest);
     }
 
-    //Updates the current cities with the new data
+    //Adds the new random recipe
     private void randomParseJson(String json) {
         Gson gson = new GsonBuilder().create();
-        Result randomresult = gson.fromJson(json, Result.class);
+        RandomRecipe randomresult = gson.fromJson(json, RandomRecipe.class);
         if(randomresult != null){
-            //Log.d(TAG, "NAME: "+ result.getResults().get(1).getTitle());
-            Log.d(TAG, "NAME: "+ randomresult.getTitle());
 
-            /*String des = result.getResults().get(0).getSummary()
+            Log.d(TAG, "Title: "+ randomresult.getRecipes().get(0).getTitle());
+
+            String des = randomresult.getRecipes().get(0).getSummary()
                     .replaceAll("<b>", "")
                     .replaceAll("</b>", "")
                     .replaceAll("<a.*>", "")
                     .replaceAll("To use.*for similar recipes.", "")
-                    .replaceAll("Try.*for similar recipes.", "");*/
+                    .replaceAll("Try.*for similar recipes.", "");
 
-            //Log.d(TAG, "DES: "+ des);
-            /*Recipe recipe = new Recipe(result.getResults().get(0).getTitle(), String.valueOf(result.getResults().get(0).getReadyInMinutes()), "test", des, result.getResults().get(0).getImage());
+            Recipe recipe = new Recipe(randomresult.getRecipes().get(0).getTitle(), String.valueOf(randomresult.getRecipes().get(0).getReadyInMinutes()), "test", des, randomresult.getRecipes().get(0).getImage());
 
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
                     db.recipeDAO().addRecipe(recipe);
                 }
-            });*/
+            });
         }
     }
     /////////////Random recipe end//////////////
