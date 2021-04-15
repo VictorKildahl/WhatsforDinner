@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import dk.au.mad21spring.project.au600963.model.Recipe;
 
-@Database(entities = {Recipe.class}, version = 12)
+@Database(entities = {Recipe.class}, version = 13)
 public abstract class RecipeDatabase extends RoomDatabase {
 
     public abstract RecipeDAO recipeDAO();  //Mandatory DAO getter

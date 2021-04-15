@@ -2,6 +2,8 @@ package dk.au.mad21spring.project.au600963.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,16 +25,26 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import dk.au.mad21spring.project.au600963.R;
+import dk.au.mad21spring.project.au600963.model.Recipe;
+import dk.au.mad21spring.project.au600963.viewmodels.DetailViewModel;
+import dk.au.mad21spring.project.au600963.viewmodels.HomeViewModel;
 
 public class HomeActivity extends AppCompatActivity {
 
     private FirebaseUser user;
-    private ImageView imgAvatar;
-    private TextView txtUsername;
+    private ImageView imgAvatar, imgRecipe;
+    private TextView txtUsername, txtHeader, txtWelcome, txtRecipe;
     private Button btnLogout;
     private Intent logindata;
     private FirebaseAuth auth;
+    private List<Recipe> recipeList;
+    private HomeViewModel hvm;
+    private Recipe todaysRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +55,20 @@ public class HomeActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-
+        hvm = new ViewModelProvider(this).get(HomeViewModel.class);
+        hvm.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(List<Recipe> recipes) {
+                recipeList = recipes;
+            }
+        });
 
         imgAvatar = findViewById(R.id.imgAvatar);
+        imgRecipe = findViewById(R.id.imgRecipe);
         txtUsername = findViewById(R.id.txtUsername);
+        txtHeader = findViewById(R.id.txtHeader);
+        txtWelcome = findViewById(R.id.txtWelcome);
+        txtRecipe = findViewById(R.id.txtRecipe);
         btnLogout = findViewById(R.id.btnLogout);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +78,9 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        getTodaysRecipe();
         updateUI();
+
 
         //Bottom Navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -83,11 +107,24 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void getTodaysRecipe() {
+        //todaysRecipe = recipeList.get(0);
+        /*int random_int = (int)(Math.random() * (recipeList.size() - 0) + 0);
+
+        if((random_int-1) < 0) {
+            todaysRecipe = recipeList.get(0);
+        } else  {
+            todaysRecipe = recipeList.get(random_int-1);
+        }*/
+    }
+
     private void updateUI() {
         Glide.with(imgAvatar.getContext()).load(user.getPhotoUrl()).into(imgAvatar);
-
-        Log.d("TAG", "user: " + user.getDisplayName());
-        txtUsername.setText("Google Username" + user.getEmail());
+        //Glide.with(imgRecipe.getContext()).load(todaysRecipe.getImgUrl()).into(imgRecipe);
+        txtWelcome.setText("Welcome!");
+        txtUsername.setText(user.getEmail());
+        txtHeader.setText("What's for dinner?");
+        //txtRecipe.setText(todaysRecipe.getName());
     }
 
     private void logout() {

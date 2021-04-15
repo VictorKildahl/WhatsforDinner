@@ -13,13 +13,15 @@ public class Recipe implements Serializable {
     public String name;
     public String time;
     public String ingrediens;
+    public String instruction;
     public String description;
     public String imgUrl;
 
-    public Recipe(String name, String time, String ingrediens, String description, String imgUrl) {
+    public Recipe(String name, String time, String ingrediens, String instruction, String description, String imgUrl) {
         this.name = name;
         this.time = time;
         this.ingrediens = ingrediens;
+        this.instruction = instruction;
         this.description = description;
         this.imgUrl = imgUrl;
     }
@@ -52,6 +54,13 @@ public class Recipe implements Serializable {
     }
     public void setIngrediens(String ingrediens) {
         this.ingrediens = ingrediens;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
 
     public String getDescription() {

@@ -29,7 +29,7 @@ public class DetailsActivity extends AppCompatActivity {
     private DetailViewModel dvm;
     private Recipe currentRecipe;
     private ImageView imgFlag;
-    private TextView txtRecipe, txtTime, txtIngrediens, txtDescription;
+    private TextView txtRecipe, txtTime, txtIngrediens, txtDescription, txtInstruction;
     private Button btnBack, btnDelete;
     private int uid;
 
@@ -43,6 +43,7 @@ public class DetailsActivity extends AppCompatActivity {
         txtRecipe = findViewById(R.id.txtRecipe);
         txtTime = findViewById(R.id.txtTime);
         txtIngrediens = findViewById(R.id.txtIngrediens);
+        txtInstruction = findViewById(R.id.txtInstruction);
         txtDescription = findViewById(R.id.txtDescription);
         btnBack = findViewById(R.id.btnBack);
         btnDelete = findViewById(R.id.btnDelete);
@@ -121,8 +122,9 @@ public class DetailsActivity extends AppCompatActivity {
         currentRecipe = recipe;
         Glide.with(imgFlag.getContext()).load(currentRecipe.getImgUrl()).into(imgFlag);
         txtRecipe.setText(currentRecipe.getName());
-        txtTime.setText(getResources().getString(R.string.txtTime) + " " + String.valueOf(currentRecipe.getTime()) + " min");
-        txtIngrediens.setText(getResources().getString(R.string.txtIngrediens) + " " + String.valueOf(currentRecipe.getIngrediens()) + "%");;
-        txtDescription.setText(getResources().getString(R.string.txtDescription) + " " + currentRecipe.getDescription());;
+        txtTime.setText(getResources().getString(R.string.txtTime) + " " + currentRecipe.getTime() + " min");
+        txtIngrediens.setText(getResources().getString(R.string.txtIngrediens) + " " + currentRecipe.getIngrediens());
+        txtInstruction.setText(getResources().getString(R.string.txtInstruction) + " " + currentRecipe.getInstruction());
+        txtDescription.setText(getResources().getString(R.string.txtDescription) + "\n" + currentRecipe.getDescription());;
     }
 }

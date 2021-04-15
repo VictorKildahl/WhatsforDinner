@@ -14,8 +14,12 @@
     <string name="imgRecipe">Opskrift</string>
     <string name="txtHealthscore">Healthscore</string>
     <string name="btnMap">Kort</string>
-    <string name="btnRandom">Random</string>
-    <string name="btnSignin">Sign in</string>
-    <string name="btnLogout">Logout</string>
-    <string name="txtUsername">Username</string>
+    <string name="btnRandom">Tilfædig</string>
+    <string name="btnSignin">Log på</string>
+    <string name="btnLogout">Log ud</string>
+    <string name="txtUsername">Brugernavn</string>
+    <string name="txtInstruction">Instuktioner: </string>
+    <string name="txtHeader">Whats for dinner?</string>
+    <string name="txtWelcome">Welcome</string>
+    <string name="imgAvatar">Avatar</string>
 </resources>

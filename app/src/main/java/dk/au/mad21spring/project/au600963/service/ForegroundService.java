@@ -66,7 +66,7 @@ public class ForegroundService extends Service {
         startForeground(Constants.NOTIFICATION_ID, notification);
 
         //This method starts recursive background work
-        //doBackgroundStuff();
+        doBackgroundStuff();
 
         //Returning START_STICKY will make the Service restart again eventually if it gets killed off (e.g. due to resources)
         return START_STICKY;
@@ -95,13 +95,13 @@ public class ForegroundService extends Service {
             public void run() {
                 try {
                     Thread.sleep(10000);     //we can sleep, because this code is not run on main thread
-                    Log.d(Constants.SERVICE, "60 seconds have passed");
+                    Log.d(Constants.SERVICE, "10 seconds have passed");
                 } catch (InterruptedException e) {
                     Log.e(Constants.SERVICE, "run: EROOR", e);
                 }
 
                 //Call to the repository that updates the cities in the list
-                repository.serviceUpdate();
+                //repository.serviceUpdate();
 
                 //Finding random Recipe for notification
                 recipeList = repository.recipes.getValue();

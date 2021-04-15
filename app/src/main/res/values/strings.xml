@@ -13,12 +13,12 @@
     <string name="imgRecipe">Recipe</string>
     <string name="txtHealthscore">Healthscore</string>
     <string name="btnMap">Map</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_recipes">Recipes</string>
-    <string name="title_map">Map</string>
     <string name="btnRandom">Random</string>
     <string name="btnSignin">Sign in</string>
     <string name="btnLogout">Logout</string>
     <string name="txtUsername">Username</string>
+    <string name="txtInstruction">Instuctions: </string>
+    <string name="txtHeader">Whats for dinner?</string>
+    <string name="txtWelcome">Welcome</string>
+    <string name="imgAvatar">Avatar</string>
 </resources>

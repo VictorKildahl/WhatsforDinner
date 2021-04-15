@@ -39,7 +39,7 @@ public class Repository {
     private static Repository instance;
     private static final String TAG = "Repository";
 
-    String[] seeder = {};
+    //String[] seeder = {};
 
     public static Repository getInstance(Application application){
         if(instance == null){
@@ -53,7 +53,7 @@ public class Repository {
         db = RecipeDatabase.getDatabase(application.getApplicationContext());
         executor = Executors.newSingleThreadExecutor();
         context = application.getApplicationContext();
-        seeder();
+        //seeder();
     }
 
     public LiveData<List<Recipe>> getRecipes() {
@@ -61,7 +61,7 @@ public class Repository {
         return recipes;
     }
 
-    //Seeding data with recipes
+    /*//Seeding data with recipes
     private void seeder() {
         executor.execute(new Runnable() {
            @Override
@@ -75,11 +75,11 @@ public class Repository {
                 }
             }
         });
-    }
+    }*/
 
     ///////SERVICE METHODS START/////////
     //Gets the recipes from the db and calls serviceLoadData
-    public void serviceUpdate(){
+    /*public void serviceUpdate(){
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -127,7 +127,7 @@ public class Repository {
         Gson gson = new GsonBuilder().create();
         Result result = gson.fromJson(json, Result.class);
         if(result != null){
-            Recipe recipe = new Recipe(result.getTitle(), String.valueOf(result.getReadyInMinutes()), "test", result.getSummary(), result.getImage()); //result.getAnalyzedInstructions().get(0).getSteps()
+            Recipe recipe = new Recipe(result.getTitle(), String.valueOf(result.getReadyInMinutes()), "ingrediens", "test", result.getSummary(), result.getImage());
 
             Log.d(TAG, "updated recipe: " + recipe.getName());
             executor.execute(new Runnable() {
@@ -137,7 +137,7 @@ public class Repository {
                 }
             });
         }
-    }
+    }*/
     ///////SERVICE METHODS END/////////
 
 
@@ -205,9 +205,17 @@ public class Repository {
                     .replaceAll("To use.*for similar recipes.", "")
                     .replaceAll("Try.*for similar recipes.", "");
 
-            //String instruction = result.getResults().get(0).getAnalyzedInstructions();
+            String instruction = "";
+            String ingrediens = "";
+            for (int i = 0; i < result.getResults().get(0).getAnalyzedInstructions().get(0).getSteps().size(); i++){
+                instruction += "\n" + result.getResults().get(0).getAnalyzedInstructions().get(0).getSteps().get(i).getStep();
 
-            Recipe recipe = new Recipe(result.getResults().get(0).getTitle(), String.valueOf(result.getResults().get(0).getReadyInMinutes()), "test", des, result.getResults().get(0).getImage());
+                for (int x = 0; x < result.getResults().get(0).getAnalyzedInstructions().get(0).getSteps().get(i).getIngredients().size(); x++){
+                    ingrediens += "\n" + result.getResults().get(0).getAnalyzedInstructions().get(0).getSteps().get(i).getIngredients().get(x).getName();
+                }
+            }
+
+            Recipe recipe = new Recipe(result.getResults().get(0).getTitle(), String.valueOf(result.getResults().get(0).getReadyInMinutes()), ingrediens, instruction, des, result.getResults().get(0).getImage());
 
             if(Exist(recipe)){
                 Toast.makeText(context, "The recipe is already in the list", Toast.LENGTH_SHORT).show();
@@ -280,7 +288,15 @@ public class Repository {
         RandomRecipe randomresult = gson.fromJson(json, RandomRecipe.class);
         if(randomresult != null){
 
-            Log.d(TAG, "Title: "+ randomresult.getRecipes().get(0).getTitle());
+            String instruction = "";
+            String ingrediens = "";
+            for (int i = 0; i < randomresult.getRecipes().get(0).getAnalyzedInstructions().get(0).getSteps().size(); i++){
+                instruction += "\n" + randomresult.getRecipes().get(0).getAnalyzedInstructions().get(0).getSteps().get(i).getStep();
+
+                for (int x = 0; x < randomresult.getRecipes().get(0).getAnalyzedInstructions().get(0).getSteps().get(i).getIngredients().size(); x++){
+                    ingrediens += "\n" + randomresult.getRecipes().get(0).getAnalyzedInstructions().get(0).getSteps().get(i).getIngredients().get(x).getName();
+                }
+            }
 
             String des = randomresult.getRecipes().get(0).getSummary()
                     .replaceAll("<b>", "")
@@ -289,7 +305,7 @@ public class Repository {
                     .replaceAll("To use.*for similar recipes.", "")
                     .replaceAll("Try.*for similar recipes.", "");
 
-            Recipe recipe = new Recipe(randomresult.getRecipes().get(0).getTitle(), String.valueOf(randomresult.getRecipes().get(0).getReadyInMinutes()), "test", des, randomresult.getRecipes().get(0).getImage());
+            Recipe recipe = new Recipe(randomresult.getRecipes().get(0).getTitle(), String.valueOf(randomresult.getRecipes().get(0).getReadyInMinutes()), ingrediens, instruction, des, randomresult.getRecipes().get(0).getImage());
 
             executor.execute(new Runnable() {
                 @Override
