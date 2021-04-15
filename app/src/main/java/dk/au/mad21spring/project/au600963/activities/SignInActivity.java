@@ -1,6 +1,7 @@
 package dk.au.mad21spring.project.au600963.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,52 +10,43 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.util.Arrays;
+import java.util.List;
 
 import dk.au.mad21spring.project.au600963.R;
+import dk.au.mad21spring.project.au600963.constants.Constants;
 
-public class HomeActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
 
-    private FirebaseUser user;
-    private ImageView imgAvatar;
-    private TextView txtUsername;
-    private Button btnLogout;
-    private Intent logindata;
+    private Button btnSignIn;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_sign_in);
 
-        logindata = getIntent();
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(auth == null){
+            //Firebase Auth
+            auth = FirebaseAuth.getInstance();
+        }
+        if(auth.getCurrentUser() != null){
+            goToApp();
+        }
 
-
-
-        imgAvatar = findViewById(R.id.imgAvatar);
-        txtUsername = findViewById(R.id.txtUsername);
-        btnLogout = findViewById(R.id.btnLogout);
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        btnSignIn = findViewById(R.id.btnSignIn);
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                logout();
+                signIn();
             }
         });
-
-        updateUI();
 
         //Bottom Navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -79,29 +71,46 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
+
     }
 
-    private void updateUI() {
-        Glide.with(imgAvatar.getContext()).load(user.getPhotoUrl()).into(imgAvatar);
-
-        Log.d("TAG", "user: " + user.getDisplayName());
-        txtUsername.setText("Google Username" + user.getEmail());
-    }
-
-    private void logout() {
-        //user.
-        /*if(auth == null){
+    private void signIn() {
+        if(auth == null){
             //Firebase Auth
             auth = FirebaseAuth.getInstance();
         }
-        if(auth.getCurrentUser() != null){
-            GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(application.getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build();
 
-            GoogleSignInClient googleClient = GoogleSignIn.getClient(application, options);
-            googleClient.signOut();
-        }*/
+        if(auth.getCurrentUser() != null){
+            goToApp();
+        } else {
+            List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.GoogleBuilder().build()
+            );
+
+            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), Constants.REQUEST_CODE_LOGIN);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == Constants.REQUEST_CODE_LOGIN){
+            if(requestCode == RESULT_OK){
+                String uid = auth.getCurrentUser().getUid();
+                String name = auth.getCurrentUser().getDisplayName();
+
+                Log.d("TAG", "UID: " + uid);
+                Log.d("TAG", "NAME: " + name);
+
+                goToApp();
+            }
+        }
+    }
+
+    private void goToApp() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

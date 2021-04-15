@@ -15,4 +15,7 @@
     <string name="txtHealthscore">Healthscore</string>
     <string name="btnMap">Kort</string>
     <string name="btnRandom">Random</string>
+    <string name="btnSignin">Sign in</string>
+    <string name="btnLogout">Logout</string>
+    <string name="txtUsername">Username</string>
 </resources>

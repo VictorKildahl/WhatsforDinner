@@ -96,7 +96,7 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.recipes:

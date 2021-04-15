@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "472692289608",
+    "project_id": "whats-for-dinner-a7377",
+    "storage_bucket": "whats-for-dinner-a7377.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472692289608:android:344b4338ae84441978a87d",
+        "android_client_info": {
+          "package_name": "dk.au.mad21spring.project.au600963"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472692289608-n0n7aimetql22uuhqeianphkng7dt6fp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.au.mad21spring.project.au600963",
+            "certificate_hash": "2da0d5d181e3cbc92ca4176e302daf4d1cc3f1c8"
+          }
+        },
+        {
+          "client_id": "472692289608-fd7amj9dinbse198bbrekhsebg5bunhf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkWMUeiRIpY0u-pbF7vtX3B62tG11hCm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472692289608-fd7amj9dinbse198bbrekhsebg5bunhf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
