@@ -19,6 +19,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -128,18 +130,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        /*if(auth == null){
+        if(auth == null){
             //Firebase Auth
             auth = FirebaseAuth.getInstance();
         }
-        if(auth.getCurrentUser() != null){
-            GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(application.getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build();
 
-            GoogleSignInClient googleClient = GoogleSignIn.getClient(application, options);
-            googleClient.signOut();
-        }*/
+        auth.signOut();
+        finish();
     }
 }

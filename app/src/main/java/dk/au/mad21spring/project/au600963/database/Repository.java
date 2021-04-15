@@ -5,7 +5,9 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,6 +15,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -57,6 +63,19 @@ public class Repository {
     }
 
     public LiveData<List<Recipe>> getRecipes() {
+        /*if(recipes == null){
+            recipes = new MutableLiveData<List<Recipe>>();
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            db.collection("recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    List<Recipe> updatedRecipes = new List<>() {
+                    }
+                }
+            })
+        }*/
         recipes = db.recipeDAO().getAll();
         return recipes;
     }

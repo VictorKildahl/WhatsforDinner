@@ -15,6 +15,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -96,21 +97,12 @@ public class SignInActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == Constants.REQUEST_CODE_LOGIN){
-            if(requestCode == RESULT_OK){
-                String uid = auth.getCurrentUser().getUid();
-                String name = auth.getCurrentUser().getDisplayName();
-
-                Log.d("TAG", "UID: " + uid);
-                Log.d("TAG", "NAME: " + name);
-
-                goToApp();
-            }
+            goToApp();
         }
     }
 
     private void goToApp() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
-        finish();
     }
 }
