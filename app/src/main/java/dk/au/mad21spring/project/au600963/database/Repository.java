@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,6 +16,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -22,7 +28,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -36,16 +45,14 @@ import dk.au.mad21spring.project.au600963.model.recipe.Result;
 
 public class Repository {
 
-    private RecipeDatabase db;
     private ExecutorService executor;           //for async processing
-    public LiveData<List<Recipe>> recipes;
+    public MutableLiveData<List<Recipe>> recipes;
     private RequestQueue queue;
     private Context context;
-    //private Result result;
     private static Repository instance;
+    private String userId;
+    private MutableLiveData<Recipe> currentRecipe = new MutableLiveData<>();
     private static final String TAG = "Repository";
-
-    //String[] seeder = {};
 
     public static Repository getInstance(Application application){
         if(instance == null){
@@ -56,110 +63,38 @@ public class Repository {
 
     //Constuctor
     public Repository(Application application) {
-        db = RecipeDatabase.getDatabase(application.getApplicationContext());
         executor = Executors.newSingleThreadExecutor();
         context = application.getApplicationContext();
-        //seeder();
     }
 
-    public LiveData<List<Recipe>> getRecipes() {
-        /*if(recipes == null){
+    public MutableLiveData<List<Recipe>> getRecipes() {
+        if(recipes == null){
             recipes = new MutableLiveData<List<Recipe>>();
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            db.collection("recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    List<Recipe> updatedRecipes = new List<>() {
+                public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                    ArrayList<Recipe> updatedRecipes = new ArrayList<>();
+
+                    if(snapshot != null && !snapshot.isEmpty()){
+                        for(DocumentSnapshot doc : snapshot.getDocuments()){
+                            Recipe r = doc.toObject(Recipe.class);
+
+                            if(r != null){
+                                updatedRecipes.add(r);
+                            }
+                        }
                     }
-                }
-            })
-        }*/
-        recipes = db.recipeDAO().getAll();
-        return recipes;
-    }
 
-    /*//Seeding data with recipes
-    private void seeder() {
-        executor.execute(new Runnable() {
-           @Override
-            public void run() {
-                int count = db.recipeDAO().getDatabaseCount();
-
-                if(count == 0){
-                    for (int i = 0; i < 0; i++){
-                        loadData(seeder[i]);
-                    }
-                }
-            }
-        });
-    }*/
-
-    ///////SERVICE METHODS START/////////
-    //Gets the recipes from the db and calls serviceLoadData
-    /*public void serviceUpdate(){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Recipe> recipesUpdate = recipes.getValue();
-
-                for (int i = 0; i < recipesUpdate.size(); i++){
-                    serviceLoadData(recipesUpdate.get(i).getName());
-                }
-            }
-        });
-
-    }
-
-    //Makes the url to update the recipes in the list
-    private void serviceLoadData(String recipeName) {
-        String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=fa4d67d553e14a638d11145e3db60a61&addRecipeInformation=true&number=1";
-        serviceSendRequest(dataUrl);
-    }
-
-    //Makes the request to the Recipe API for the current cities
-    private void serviceSendRequest(String dataUrl) {
-        if(queue == null){
-            queue = Volley.newRequestQueue(context);
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, dataUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response){
-                Log.d(Constants.TAG, "Recipe information: " + response);
-                serviceParseJson(response);
-            }
-        }, new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error){
-                Log.e(Constants.TAG, "That did not work!", error);
-                Toast.makeText(context, "The recipe could not be found", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        queue.add(stringRequest);
-    }
-
-    //Updates the current cities with the new data
-    private void serviceParseJson(String json) {
-        Gson gson = new GsonBuilder().create();
-        Result result = gson.fromJson(json, Result.class);
-        if(result != null){
-            Recipe recipe = new Recipe(result.getTitle(), String.valueOf(result.getReadyInMinutes()), "ingrediens", "test", result.getSummary(), result.getImage());
-
-            Log.d(TAG, "updated recipe: " + recipe.getName());
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    db.recipeDAO().updateRecipe(recipe);
+                    recipes.setValue(updatedRecipes);
                 }
             });
         }
-    }*/
-    ///////SERVICE METHODS END/////////
 
-
+        return recipes;
+    }
 
     //add a new recipe to database
     public void addRecipe(String recipeName){
@@ -240,15 +175,39 @@ public class Repository {
                 Toast.makeText(context, "The recipe is already in the list", Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        db.recipeDAO().addRecipe(recipe);
-                    }
-                });
+                userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes")
+                        .add(recipe)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                addIdToRecipe(recipe, documentReference.getId());
+                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
+
                 Toast.makeText(context, "The recipe has been added to the list", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void addIdToRecipe(Recipe recipe, String id) {
+        recipe.setUid(id);
+
+        Map<String, Object> recipeData = new HashMap<>();
+        recipeData.put("uid", id);
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes")
+                .document(id)
+                .update(recipeData);
     }
 
     //Checks if the recipe already exist in the list
@@ -267,7 +226,6 @@ public class Repository {
         }
         return found;
     }
-
 
     /////////////Random recipe start//////////////
     //Makes the url to update the recipes in the list
@@ -326,65 +284,129 @@ public class Repository {
 
             Recipe recipe = new Recipe(randomresult.getRecipes().get(0).getTitle(), String.valueOf(randomresult.getRecipes().get(0).getReadyInMinutes()), ingrediens, instruction, des, randomresult.getRecipes().get(0).getImage());
 
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    db.recipeDAO().addRecipe(recipe);
-                }
-            });
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes")
+                    .add(recipe)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });
         }
     }
     /////////////Random recipe end//////////////
 
 
 
-
-
-
-
-
-
-
-
-
-
     //Get clicked recipe
-    public Recipe getRecipe(int uid){
-        Future<Recipe> p = executor.submit(new Callable<Recipe>() {
-            @Override
-            public Recipe call() {
-                return db.recipeDAO().findRecipe(uid);
-            }
-        });
+    public void getRecipe(String uid){
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").document(uid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        Recipe temprecipe = new Recipe(
+                                snapshot.get("name").toString(),
+                                snapshot.get("time").toString(),
+                                snapshot.get("ingrediens").toString(),
+                                snapshot.get("instruction").toString(),
+                                snapshot.get("description").toString(),
+                                snapshot.get("imgUrl").toString());
 
-        try {
-            return p.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+                        temprecipe.setUid(snapshot.getId());
+                        currentRecipe.setValue(temprecipe);
+                        Log.d(TAG, "DocumentSnapshot successfully fetched!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
 
-        return null;
+    public LiveData<Recipe> getCurrentRecipe(){
+        return currentRecipe;
     }
 
     //Delete clicked Recipe
-    public void delete(Recipe recipe){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                db.recipeDAO().delete(recipe);
-            }
-        });
+    public void delete(String uid){
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").document(uid).delete();
     }
 
-    //update Recipe in database
-    public void updateRecipe(Recipe recipe){
+
+
+    ///////SERVICE METHODS START/////////
+    //Gets the recipes from the db and calls serviceLoadData
+    /*public void serviceUpdate(){
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                db.recipeDAO().updateRecipe(recipe);
+                List<Recipe> recipesUpdate = recipes.getValue();
+
+                for (int i = 0; i < recipesUpdate.size(); i++){
+                    serviceLoadData(recipesUpdate.get(i).getName());
+                }
             }
         });
+
     }
+
+    //Makes the url to update the recipes in the list
+    private void serviceLoadData(String recipeName) {
+        String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=fa4d67d553e14a638d11145e3db60a61&addRecipeInformation=true&number=1";
+        serviceSendRequest(dataUrl);
+    }
+
+    //Makes the request to the Recipe API for the current cities
+    private void serviceSendRequest(String dataUrl) {
+        if(queue == null){
+            queue = Volley.newRequestQueue(context);
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, dataUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response){
+                Log.d(Constants.TAG, "Recipe information: " + response);
+                serviceParseJson(response);
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+                Log.e(Constants.TAG, "That did not work!", error);
+                Toast.makeText(context, "The recipe could not be found", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
+    //Updates the current cities with the new data
+    private void serviceParseJson(String json) {
+        Gson gson = new GsonBuilder().create();
+        Result result = gson.fromJson(json, Result.class);
+        if(result != null){
+            Recipe recipe = new Recipe(result.getTitle(), String.valueOf(result.getReadyInMinutes()), "ingrediens", "test", result.getSummary(), result.getImage());
+
+            Log.d(TAG, "updated recipe: " + recipe.getName());
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    db.recipeDAO().updateRecipe(recipe);
+                }
+            });
+        }
+    }*/
+    ///////SERVICE METHODS END/////////
+
 }

@@ -31,7 +31,7 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageView imgFlag;
     private TextView txtRecipe, txtTime, txtIngrediens, txtDescription, txtInstruction;
     private Button btnBack, btnDelete;
-    private int uid;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +50,12 @@ public class DetailsActivity extends AppCompatActivity {
 
         //Viewmodel
         Intent recipeData = getIntent();
-        uid = recipeData.getIntExtra(Constants.UID, 0);
+        uid = recipeData.getStringExtra(Constants.UID);
         dvm = new ViewModelProvider(this).get(DetailViewModel.class);
-        dvm.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+        dvm.getCurrentRecipe().observe(this, new Observer<Recipe>() {
             @Override
-            public void onChanged(List<Recipe> recipes) {
-                currentRecipe = dvm.getRecipe(uid);
+            public void onChanged(Recipe recipe) {
+                currentRecipe = recipe;
 
                 if(currentRecipe != null) {
                     updateUI(currentRecipe);

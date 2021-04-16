@@ -18,8 +18,8 @@ public class RecipeViewModel extends AndroidViewModel {
         repository = Repository.getInstance(application);
     }
 
-    public Recipe getRecipe(int uid) {
-        return repository.getRecipe(uid);
+    public void getRecipe(String uid) {
+        repository.getRecipe(uid);
     }
 
     public void getRandomRecipe() {
@@ -34,7 +34,7 @@ public class RecipeViewModel extends AndroidViewModel {
         repository.addRecipe(recipeName);
     }
 
-    public void deleteRecipe(Recipe recipe){
-        repository.delete(recipe);
+    public void deleteRecipe(String uid){
+        repository.delete(uid);
     }
 }

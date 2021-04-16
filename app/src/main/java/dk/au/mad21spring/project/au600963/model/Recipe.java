@@ -1,21 +1,18 @@
 package dk.au.mad21spring.project.au600963.model;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import java.io.Serializable;
 
-@Entity
-public class Recipe implements Serializable {
 
-    @PrimaryKey(autoGenerate = true)
-    private int uid;
+public class Recipe implements Serializable {
+    public String uid;
     public String name;
     public String time;
     public String ingrediens;
     public String instruction;
     public String description;
     public String imgUrl;
+
+    public Recipe(){}
 
     public Recipe(String name, String time, String ingrediens, String instruction, String description, String imgUrl) {
         this.name = name;
@@ -26,11 +23,11 @@ public class Recipe implements Serializable {
         this.imgUrl = imgUrl;
     }
 
-    public int getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

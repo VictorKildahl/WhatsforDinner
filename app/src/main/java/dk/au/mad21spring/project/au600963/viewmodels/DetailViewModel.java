@@ -19,11 +19,7 @@ public class DetailViewModel extends AndroidViewModel {
         repository = Repository.getInstance(application);
     }
 
-    public Recipe getRecipe(int uid) {
-        return repository.getRecipe(uid);
-    }
-
-    public LiveData<List<Recipe>> getRecipeList() {
-        return repository.getRecipes();
+    public LiveData<Recipe> getCurrentRecipe() {
+        return repository.getCurrentRecipe();
     }
 }

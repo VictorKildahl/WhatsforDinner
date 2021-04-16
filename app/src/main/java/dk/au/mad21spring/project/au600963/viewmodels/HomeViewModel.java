@@ -19,8 +19,8 @@ public class HomeViewModel extends AndroidViewModel {
         repository = Repository.getInstance(application);
     }
 
-    public Recipe getRecipe(int uid) {
-        return repository.getRecipe(uid);
+    public void getRecipe(String uid) {
+         repository.getRecipe(uid);
     }
 
     public LiveData<List<Recipe>> getRecipeList() {

@@ -39,7 +39,7 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
     private String recipeName;
     private List<Recipe> recipeList;
     private Location userLocation;
-    private int uid;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +118,8 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
     public void onRecipeClicked(int index){
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(Constants.UID, recipeList.get(index).getUid());
+
+        rvm.getRecipe(recipeList.get(index).getUid());
         startActivityForResult(intent, Constants.REQUEST_CODE_DETAILS);
     }
 
@@ -129,9 +131,8 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
         if(requestCode == Constants.REQUEST_CODE_DETAILS) {
             if(resultCode == RESULT_OK) { }
             if(resultCode == Constants.REQUEST_CODE_DELETE){
-                uid = data.getIntExtra(Constants.UID, 0);
-                Recipe deleteRecipe = rvm.getRecipe(uid);
-                rvm.deleteRecipe(deleteRecipe);
+                uid = data.getStringExtra(Constants.UID);
+                rvm.deleteRecipe(uid);
                 Toast.makeText(this, "The recipe has been removed", Toast.LENGTH_SHORT).show();
             } else { }
         }
