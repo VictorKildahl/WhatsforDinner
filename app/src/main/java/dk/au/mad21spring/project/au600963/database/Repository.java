@@ -52,6 +52,7 @@ public class Repository {
     private static Repository instance;
     private String userId;
     private MutableLiveData<Recipe> currentRecipe = new MutableLiveData<>();
+    private Recipe todaysRecipe;
     private static final String TAG = "Repository";
 
     public static Repository getInstance(Application application){
@@ -71,29 +72,35 @@ public class Repository {
         if(recipes == null){
             recipes = new MutableLiveData<List<Recipe>>();
 
-            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
 
-            FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
-                    ArrayList<Recipe> updatedRecipes = new ArrayList<>();
+            if(auth != null) {
+                userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    if(snapshot != null && !snapshot.isEmpty()){
-                        for(DocumentSnapshot doc : snapshot.getDocuments()){
-                            Recipe r = doc.toObject(Recipe.class);
+                FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                        ArrayList<Recipe> updatedRecipes = new ArrayList<>();
 
-                            if(r != null){
-                                updatedRecipes.add(r);
+                        if(snapshot != null && !snapshot.isEmpty()){
+                            for(DocumentSnapshot doc : snapshot.getDocuments()){
+                                Recipe r = doc.toObject(Recipe.class);
+
+                                if(r != null){
+                                    updatedRecipes.add(r);
+                                }
                             }
                         }
-                    }
 
-                    recipes.setValue(updatedRecipes);
-                }
-            });
+                        recipes.setValue(updatedRecipes);
+                    }
+                });
+
+                return recipes;
+            }
         }
 
-        return recipes;
+        return null;
     }
 
     //add a new recipe to database
@@ -282,14 +289,15 @@ public class Repository {
                     .replaceAll("To use.*for similar recipes.", "")
                     .replaceAll("Try.*for similar recipes.", "");
 
-            Recipe recipe = new Recipe(randomresult.getRecipes().get(0).getTitle(), String.valueOf(randomresult.getRecipes().get(0).getReadyInMinutes()), ingrediens, instruction, des, randomresult.getRecipes().get(0).getImage());
+            Recipe randomrecipe = new Recipe(randomresult.getRecipes().get(0).getTitle(), String.valueOf(randomresult.getRecipes().get(0).getReadyInMinutes()), ingrediens, instruction, des, randomresult.getRecipes().get(0).getImage());
 
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes")
-                    .add(recipe)
+                    .add(randomrecipe)
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
+                            addIdToRecipe(randomrecipe, documentReference.getId());
                             Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                         }
                     })
@@ -336,6 +344,47 @@ public class Repository {
 
     public LiveData<Recipe> getCurrentRecipe(){
         return currentRecipe;
+    }
+
+
+    //Get random recipe from list
+    public Recipe getRandomRecipeFromList(){
+        /*if(recipes == null){
+            recipes = new MutableLiveData<List<Recipe>>();
+
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                    ArrayList<Recipe> updatedRecipes = new ArrayList<>();
+
+                    if(snapshot != null && !snapshot.isEmpty()){
+                        for(DocumentSnapshot doc : snapshot.getDocuments()){
+                            Recipe r = doc.toObject(Recipe.class);
+
+                            if(r != null){
+                                updatedRecipes.add(r);
+                            }
+                        }
+                    }
+
+                    recipes.setValue(updatedRecipes);
+                }
+            });
+        }
+
+        int random_int = (int)(Math.random() * (recipes.getValue().size() - 0) + 0);
+
+        if((random_int-1) < 0) {
+            todaysRecipe = recipes.getValue().get(0);
+        } else  {
+            todaysRecipe = recipes.getValue().get(random_int-1);
+        }
+
+        return todaysRecipe;*/
+
+        return null;
     }
 
     //Delete clicked Recipe

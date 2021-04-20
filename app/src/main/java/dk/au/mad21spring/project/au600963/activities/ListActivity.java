@@ -76,7 +76,10 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
             @Override
             public void onClick(View view) {
                 recipeName = edtSearch.getText().toString();
-                rvm.addRecipe(recipeName);
+
+                if(!recipeName.isEmpty()){
+                    rvm.addRecipe(recipeName);
+                }
             }
         });
 

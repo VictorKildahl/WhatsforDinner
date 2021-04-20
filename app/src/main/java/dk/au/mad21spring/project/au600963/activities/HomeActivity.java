@@ -110,23 +110,21 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void getTodaysRecipe() {
-        //todaysRecipe = recipeList.get(0);
-        /*int random_int = (int)(Math.random() * (recipeList.size() - 0) + 0);
+        Recipe todaysRecipe = hvm.getRandomRecipeFromList();
 
-        if((random_int-1) < 0) {
-            todaysRecipe = recipeList.get(0);
-        } else  {
-            todaysRecipe = recipeList.get(random_int-1);
-        }*/
+        if(todaysRecipe == null){
+            txtRecipe.setText("Today's dinner could not be shown. \nThere is currently no recipes on this account.");
+        } else {
+            //txtRecipe.setText(todaysRecipe.getName());
+            //Glide.with(imgRecipe.getContext()).load(todaysRecipe.getImgUrl()).into(imgRecipe);
+        }
     }
 
     private void updateUI() {
         Glide.with(imgAvatar.getContext()).load(user.getPhotoUrl()).into(imgAvatar);
-        //Glide.with(imgRecipe.getContext()).load(todaysRecipe.getImgUrl()).into(imgRecipe);
         txtWelcome.setText("Welcome!");
         txtUsername.setText(user.getEmail());
         txtHeader.setText("What's for dinner?");
-        //txtRecipe.setText(todaysRecipe.getName());
     }
 
     private void logout() {
