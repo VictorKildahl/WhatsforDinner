@@ -1,12 +1,11 @@
 <resources>
-    <string name="app_name">Recipe Project</string>
+    <string name="app_name">Whats for dinner?</string>
     <string name="btnBack">Back</string>
     <string name="btnCancel">Cancel</string>
     <string name="btnOk">Ok</string>
     <string name="btnAdd">Add</string>
     <string name="btnDelete">Delete</string>
     <string name="edtSearch">Search here</string>
-    <string name="txtRecipe">Recipe</string>
     <string name="txtTime">Preparation time: </string>
     <string name="txtIngrediens">Ingrediens: </string>
     <string name="txtDescription">Description: </string>
@@ -20,4 +19,6 @@
     <string name="txtHeader">Whats for dinner?</string>
     <string name="txtWelcome">Welcome!</string>
     <string name="imgAvatar">Avatar</string>
+    <string name="txtRecipe">Todays dinner could not be shown.</string>
+    <string name="txtRecipe2">There is currently no recipes on this account.</string>
 </resources>
