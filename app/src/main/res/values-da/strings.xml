@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Opskrifts Projekt</string>
+    <string name="app_name">Whats for dinner?</string>
     <string name="btnBack">Tilbage</string>
     <string name="btnCancel">Fortryd</string>
     <string name="btnOk">Ok</string>
     <string name="btnAdd">Tilføj</string>
     <string name="btnDelete">Slet</string>
     <string name="edtSearch">Søg her</string>
-    <string name="txtRecipe">Opskrift</string>
-    <string name="txtTime">Forberedelsestid</string>
-    <string name="txtIngrediens">Ingredienser</string>
-    <string name="txtDescription">Beskrivelse</string>
+    <string name="txtTime">Forberedelsestid:</string>
+    <string name="txtIngrediens">Ingredienser:</string>
+    <string name="txtDescription">Beskrivelse:</string>
     <string name="imgRecipe">Opskrift</string>
     <string name="btnMap">Kort</string>
     <string name="btnRandom">Tilfædig</string>
@@ -21,4 +20,6 @@
     <string name="txtHeader">Hvad er der til aftensmad?</string>
     <string name="txtWelcome">Velkommen!</string>
     <string name="imgAvatar">Avatar</string>
+    <string name="txtRecipe">Dagens aftensmad kan ikke vises.</string>
+    <string name="txtRecipe2">Der er ikke nogle opskrifter på denne bruger.</string>
 </resources>

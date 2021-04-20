@@ -40,11 +40,11 @@ public class SignInActivity extends AppCompatActivity {
     //Ui widgets and variables
     private Button btnSignIn;
     private FirebaseAuth auth;
-    private GoogleSignInClient mGoogleSignInClient;
+    /*private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 234;
 
     //Tag for the logs optional
-    private static final String TAG = "simplifiedcoding";
+    private static final String TAG = "simplifiedcoding";*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +52,13 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         //Firebase
-        /*if(auth == null){
+        if(auth == null){
             //Firebase Auth
             auth = FirebaseAuth.getInstance();
-        }*/
-        /*if(auth.getCurrentUser() != null){
+        }
+        if(auth.getCurrentUser() != null){
             goToApp();
-        }*/
+        }
         auth = FirebaseAuth.getInstance();
 
         //Bottom Navigation
@@ -85,12 +85,12 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);*/
 
         //Handling what happens when clicking button "SignIn"
         btnSignIn = findViewById(R.id.btnSignIn);
@@ -112,20 +112,20 @@ public class SignInActivity extends AppCompatActivity {
         if(auth.getCurrentUser() != null){
             goToApp();
         } else {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            /*Intent signInIntent = mGoogleSignInClient.getSignInIntent();
 
             //starting the activity for result
-            startActivityForResult(signInIntent, RC_SIGN_IN);
+            startActivityForResult(signInIntent, RC_SIGN_IN);*/
 
 
 
 
 
-            /*List<AuthUI.IdpConfig> providers = Arrays.asList(
+            List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build()
             );
 
-            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), Constants.REQUEST_CODE_LOGIN);*/
+            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), Constants.REQUEST_CODE_LOGIN);
         }
     }
 
@@ -134,10 +134,10 @@ public class SignInActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /*if(requestCode == Constants.REQUEST_CODE_LOGIN){
+        if(requestCode == Constants.REQUEST_CODE_LOGIN){
             goToApp();
-        }*/
-        if (requestCode == RC_SIGN_IN) {
+        }
+        /*if (requestCode == RC_SIGN_IN) {
 
             //Getting the GoogleSignIn Task
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -150,10 +150,10 @@ public class SignInActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 Toast.makeText(SignInActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        }
+        }*/
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    /*private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         //getting the auth credential
@@ -177,7 +177,7 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     }
                 });
-    }
+    }*/
 
     //If logged in, go to home activity
     private void goToApp() {

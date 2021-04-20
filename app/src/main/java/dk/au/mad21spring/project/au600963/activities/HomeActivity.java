@@ -120,7 +120,7 @@ public class HomeActivity extends AppCompatActivity {
         //recipeList.size();
 
         if(todaysRecipe == null){
-            txtRecipe.setText("Today's dinner could not be shown. \nThere is currently no recipes on this account.");
+            txtRecipe.setText(getResources().getString(R.string.txtRecipe) + "\n" + getResources().getString(R.string.txtRecipe2));
         } else {
             //txtRecipe.setText(todaysRecipe.getName());
             //Glide.with(imgRecipe.getContext()).load(todaysRecipe.getImgUrl()).into(imgRecipe);
