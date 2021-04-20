@@ -39,11 +39,11 @@ import dk.au.mad21spring.project.au600963.viewmodels.HomeViewModel;
 
 public class HomeActivity extends AppCompatActivity {
 
+    //Ui widgets and variables
     private FirebaseUser user;
     private ImageView imgAvatar, imgRecipe;
     private TextView txtUsername, txtHeader, txtWelcome, txtRecipe;
     private Button btnLogout;
-    private Intent logindata;
     private FirebaseAuth auth;
     private List<Recipe> recipeList;
     private HomeViewModel hvm;
@@ -54,18 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        logindata = getIntent();
-        auth = FirebaseAuth.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
-        hvm = new ViewModelProvider(this).get(HomeViewModel.class);
-        hvm.getRecipeList().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(List<Recipe> recipes) {
-                recipeList = recipes;
-            }
-        });
-
+        //Setting up UI elements
         imgAvatar = findViewById(R.id.imgAvatar);
         imgRecipe = findViewById(R.id.imgRecipe);
         txtUsername = findViewById(R.id.txtUsername);
@@ -74,16 +63,26 @@ public class HomeActivity extends AppCompatActivity {
         txtRecipe = findViewById(R.id.txtRecipe);
         btnLogout = findViewById(R.id.btnLogout);
 
+        //Firebase
+        auth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //Viewmodel
+        hvm = new ViewModelProvider(this).get(HomeViewModel.class);
+        hvm.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(List<Recipe> recipes) {
+                recipeList = recipes;
+            }
+        });
+
+        //Handling what happens when clicking button "Logout"
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 logout();
             }
         });
-
-        getTodaysRecipe();
-        updateUI();
-
 
         //Bottom Navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -108,8 +107,13 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        //Update UI
+        getTodaysRecipe();
+        updateUI();
     }
 
+    //Sets todays recipe information
     private void getTodaysRecipe() {
         //LiveData<List<Recipe>> todaysRecipe = hvm.getRecipeList();
         //todaysRecipe.getValue().size();
@@ -123,13 +127,15 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    //Set information from google login
     private void updateUI() {
         Glide.with(imgAvatar.getContext()).load(user.getPhotoUrl()).into(imgAvatar);
-        txtWelcome.setText("Welcome!");
+        txtWelcome.setText(getResources().getString(R.string.txtWelcome));
         txtUsername.setText(user.getEmail());
-        txtHeader.setText("What's for dinner?");
+        txtHeader.setText(getResources().getString(R.string.txtHeader));
     }
 
+    //Log out from google
     private void logout() {
         if(auth == null){
             //Firebase Auth

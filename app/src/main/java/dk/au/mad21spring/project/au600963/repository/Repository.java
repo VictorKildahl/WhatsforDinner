@@ -1,4 +1,4 @@
-package dk.au.mad21spring.project.au600963.database;
+package dk.au.mad21spring.project.au600963.repository;
 
 import android.app.Application;
 import android.content.Context;
@@ -32,11 +32,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import dk.au.mad21spring.project.au600963.constants.Constants;
 import dk.au.mad21spring.project.au600963.model.Recipe;
@@ -45,15 +42,14 @@ import dk.au.mad21spring.project.au600963.model.recipe.Result;
 
 public class Repository {
 
-    private ExecutorService executor;           //for async processing
     public MutableLiveData<List<Recipe>> recipes;
+    private ExecutorService executor;           //for async processing
     private RequestQueue queue;
     private Context context;
     private static Repository instance;
     private String userId;
     private MutableLiveData<Recipe> currentRecipe = new MutableLiveData<>();
     private Recipe todaysRecipe;
-    private static final String TAG = "Repository";
 
     public static Repository getInstance(Application application){
         if(instance == null){
@@ -68,10 +64,10 @@ public class Repository {
         context = application.getApplicationContext();
     }
 
+    //Gets all recipes from the user that is logged in
     public MutableLiveData<List<Recipe>> getRecipes() {
         if(recipes == null){
             recipes = new MutableLiveData<List<Recipe>>();
-
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -107,16 +103,17 @@ public class Repository {
         });
     }
 
-    //Making URL to Weather API
+    //Making URL to Recipe API
     private void loadData(String recipeName) {
-        //kildahl 01: fa4d67d553e14a638d11145e3db60a61
+        //If the api dosn't work try one of these API Keys:
+        // kildahl 01: fa4d67d553e14a638d11145e3db60a61
         //kildahl 02: bd2e943f6c2f411586df06712425fce9
         recipeName = recipeName.replace(" ", "_");
         String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=1";
         sendRequest(dataUrl);
     }
 
-    //Getting data from Weather API
+    //Getting data from Recipe API
     private void sendRequest(String dataUrl) {
         executor.execute(new Runnable() {
             @Override
@@ -145,7 +142,7 @@ public class Repository {
 
     }
 
-    //Putting the data from api into arraylist
+    //Putting the data from api into firebase database
     private void parseJson(String json) {
         Gson gson = new GsonBuilder().create();
         Result result = gson.fromJson(json, Result.class);
@@ -184,13 +181,13 @@ public class Repository {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 addIdToRecipe(recipe, documentReference.getId());
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                Log.d(Constants.FIREBASE, "DocumentSnapshot added with ID: " + documentReference.getId());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
+                                Log.w(Constants.FIREBASE, "Error adding document", e);
                             }
                         });
 
@@ -199,6 +196,7 @@ public class Repository {
         }
     }
 
+    //Adds the ID from firebase to the specific Recipe
     private void addIdToRecipe(Recipe recipe, String id) {
         recipe.setUid(id);
 
@@ -229,15 +227,16 @@ public class Repository {
     }
 
     /////////////Random recipe start//////////////
-    //Makes the url to update the recipes in the list
+    //Makes the url to get random recipe
     public void getRandomRecipe() {
+        //If the api dosn't work try one of these API Keys:
         //kildahl 01: fa4d67d553e14a638d11145e3db60a61
         //kildahl 02: bd2e943f6c2f411586df06712425fce9
         String randomdataUrl = "https://api.spoonacular.com/recipes/random?apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=1";
         randomSendRequest(randomdataUrl);
     }
 
-    //Makes the request to the Recipe API for the current cities
+    //Makes the request to the Recipe API, asking for random recipe
     private void randomSendRequest(String dataUrl) {
         if(queue == null){
             queue = Volley.newRequestQueue(context);
@@ -260,7 +259,7 @@ public class Repository {
         queue.add(stringRequest);
     }
 
-    //Adds the new random recipe
+    //Adds the new random recipe to firebase
     private void randomParseJson(String json) {
         Gson gson = new GsonBuilder().create();
         RandomRecipe randomresult = gson.fromJson(json, RandomRecipe.class);
@@ -292,13 +291,13 @@ public class Repository {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             addIdToRecipe(randomrecipe, documentReference.getId());
-                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            Log.d(Constants.FIREBASE, "DocumentSnapshot added with ID: " + documentReference.getId());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error adding document", e);
+                            Log.w(Constants.FIREBASE, "Error adding document", e);
                         }
                     });
         }
@@ -325,17 +324,18 @@ public class Repository {
 
                         temprecipe.setUid(snapshot.getId());
                         currentRecipe.setValue(temprecipe);
-                        Log.d(TAG, "DocumentSnapshot successfully fetched!");
+                        Log.d(Constants.FIREBASE, "DocumentSnapshot successfully fetched!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting document", e);
+                        Log.w(Constants.FIREBASE, "Error deleting document", e);
                     }
                 });
     }
 
+    //Returns information of the clicked recipe
     public LiveData<Recipe> getCurrentRecipe(){
         return currentRecipe;
     }
@@ -386,6 +386,17 @@ public class Repository {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").document(uid).delete();
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

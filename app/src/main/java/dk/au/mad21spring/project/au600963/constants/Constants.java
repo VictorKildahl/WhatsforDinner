@@ -12,6 +12,7 @@ public class Constants {
     public static final String UID = "UID";
     public static final String SERVICE = "ForegroundService";
     public static final String SERVICE_CHANNEL = "serviceChannel";
+    public static final String FIREBASE = "Firebase";
 
     public static final String EXTRA_USER_LATITUDE = "location_latitude";
     public static final String EXTRA_USER_LONGITUDE = "location_longitude";

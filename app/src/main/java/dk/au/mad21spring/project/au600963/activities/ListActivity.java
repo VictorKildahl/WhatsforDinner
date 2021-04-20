@@ -38,7 +38,6 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
     private RecipeViewModel rvm;
     private String recipeName;
     private List<Recipe> recipeList;
-    private Location userLocation;
     private String uid;
 
     @Override
@@ -83,7 +82,7 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
             }
         });
 
-        //Handling what happens when clicking button "Map"
+        //Handling what happens when clicking button "Random"
         btnRandom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,9 +90,9 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
             }
         });
 
+        //Bottom Navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.recipes);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -113,8 +112,6 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
             }
         });
     }
-
-
 
     //Handling what happens when a Recipe is clicked
     @Override

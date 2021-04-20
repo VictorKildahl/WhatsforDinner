@@ -5,10 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import java.util.List;
-
 import dk.au.mad21spring.project.au600963.model.Recipe;
-import dk.au.mad21spring.project.au600963.database.Repository;
+import dk.au.mad21spring.project.au600963.repository.Repository;
 
 public class DetailViewModel extends AndroidViewModel {
 
@@ -19,6 +17,7 @@ public class DetailViewModel extends AndroidViewModel {
         repository = Repository.getInstance(application);
     }
 
+    //Gets information about the clicked recipe
     public LiveData<Recipe> getCurrentRecipe() {
         return repository.getCurrentRecipe();
     }

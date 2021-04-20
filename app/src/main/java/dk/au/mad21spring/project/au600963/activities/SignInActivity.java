@@ -25,6 +25,7 @@ import dk.au.mad21spring.project.au600963.constants.Constants;
 
 public class SignInActivity extends AppCompatActivity {
 
+    //Ui widgets and variables
     private Button btnSignIn;
     private FirebaseAuth auth;
 
@@ -33,6 +34,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        //Firebase
         if(auth == null){
             //Firebase Auth
             auth = FirebaseAuth.getInstance();
@@ -41,6 +43,7 @@ public class SignInActivity extends AppCompatActivity {
             goToApp();
         }
 
+        //Handling what happens when clicking button "SignIn"
         btnSignIn = findViewById(R.id.btnSignIn);
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,9 +75,9 @@ public class SignInActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
+    //Setup google login from firebase
     private void signIn() {
         if(auth == null){
             //Firebase Auth
@@ -92,6 +95,7 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    //Handling what happens when logged in
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -101,6 +105,7 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    //If logged in, go to home activity
     private void goToApp() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);

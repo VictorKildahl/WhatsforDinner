@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import dk.au.mad21spring.project.au600963.constants.Constants;
 import dk.au.mad21spring.project.au600963.R;
 import dk.au.mad21spring.project.au600963.model.Recipe;
-import dk.au.mad21spring.project.au600963.database.Repository;
+import dk.au.mad21spring.project.au600963.repository.Repository;
 
 public class ForegroundService extends Service {
 

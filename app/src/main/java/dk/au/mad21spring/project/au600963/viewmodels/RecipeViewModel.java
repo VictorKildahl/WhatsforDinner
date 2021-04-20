@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import dk.au.mad21spring.project.au600963.model.Recipe;
-import dk.au.mad21spring.project.au600963.database.Repository;
+import dk.au.mad21spring.project.au600963.repository.Repository;
 
 public class RecipeViewModel extends AndroidViewModel {
     private Repository repository;
@@ -18,22 +18,27 @@ public class RecipeViewModel extends AndroidViewModel {
         repository = Repository.getInstance(application);
     }
 
+    //Gets a specific recipe
     public void getRecipe(String uid) {
         repository.getRecipe(uid);
     }
 
+    //Gets a random recipe
     public void getRandomRecipe() {
         repository.getRandomRecipe();
     }
 
+    //Gets a list of all recipes
     public LiveData<List<Recipe>> getRecipeList() {
         return repository.getRecipes();
     }
 
+    //Adds a specific recipe
     public void addRecipe(String recipeName){
         repository.addRecipe(recipeName);
     }
 
+    //Deletes then chosen recipe
     public void deleteRecipe(String uid){
         repository.delete(uid);
     }
