@@ -2,6 +2,7 @@ package dk.au.mad21spring.project.au600963.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -110,7 +111,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void getTodaysRecipe() {
-        Recipe todaysRecipe = hvm.getRandomRecipeFromList();
+        //LiveData<List<Recipe>> todaysRecipe = hvm.getRecipeList();
+        //todaysRecipe.getValue().size();
+        //recipeList.size();
 
         if(todaysRecipe == null){
             txtRecipe.setText("Today's dinner could not be shown. \nThere is currently no recipes on this account.");

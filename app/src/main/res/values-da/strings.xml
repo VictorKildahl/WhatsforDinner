@@ -12,14 +12,13 @@
     <string name="txtIngrediens">Ingredienser</string>
     <string name="txtDescription">Beskrivelse</string>
     <string name="imgRecipe">Opskrift</string>
-    <string name="txtHealthscore">Healthscore</string>
     <string name="btnMap">Kort</string>
     <string name="btnRandom">Tilfædig</string>
     <string name="btnSignin">Log på</string>
     <string name="btnLogout">Log ud</string>
     <string name="txtUsername">Brugernavn</string>
     <string name="txtInstruction">Instuktioner: </string>
-    <string name="txtHeader">Whats for dinner?</string>
-    <string name="txtWelcome">Welcome</string>
+    <string name="txtHeader">Hvad er der til aftensmad?</string>
+    <string name="txtWelcome">Velkommen!</string>
     <string name="imgAvatar">Avatar</string>
 </resources>

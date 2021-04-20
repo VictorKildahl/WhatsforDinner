@@ -72,35 +72,29 @@ public class Repository {
         if(recipes == null){
             recipes = new MutableLiveData<List<Recipe>>();
 
-            FirebaseAuth auth = FirebaseAuth.getInstance();
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            if(auth != null) {
-                userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                    ArrayList<Recipe> updatedRecipes = new ArrayList<>();
 
-                FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
-                        ArrayList<Recipe> updatedRecipes = new ArrayList<>();
+                    if(snapshot != null && !snapshot.isEmpty()){
+                        for(DocumentSnapshot doc : snapshot.getDocuments()){
+                            Recipe r = doc.toObject(Recipe.class);
 
-                        if(snapshot != null && !snapshot.isEmpty()){
-                            for(DocumentSnapshot doc : snapshot.getDocuments()){
-                                Recipe r = doc.toObject(Recipe.class);
-
-                                if(r != null){
-                                    updatedRecipes.add(r);
-                                }
+                            if(r != null){
+                                updatedRecipes.add(r);
                             }
                         }
-
-                        recipes.setValue(updatedRecipes);
                     }
-                });
 
-                return recipes;
-            }
+                    recipes.setValue(updatedRecipes);
+                }
+            });
         }
 
-        return null;
+        return recipes;
     }
 
     //add a new recipe to database
@@ -349,37 +343,37 @@ public class Repository {
 
     //Get random recipe from list
     public Recipe getRandomRecipeFromList(){
-        /*if(recipes == null){
-            recipes = new MutableLiveData<List<Recipe>>();
+        /*MutableLiveData allRecipes = new MutableLiveData<List<Recipe>>();
 
-            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
-                    ArrayList<Recipe> updatedRecipes = new ArrayList<>();
+        FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                ArrayList<Recipe> updatedRecipes = new ArrayList<>();
 
-                    if(snapshot != null && !snapshot.isEmpty()){
-                        for(DocumentSnapshot doc : snapshot.getDocuments()){
-                            Recipe r = doc.toObject(Recipe.class);
+                if(snapshot != null && !snapshot.isEmpty()){
+                    for(DocumentSnapshot doc : snapshot.getDocuments()){
+                        Recipe r = doc.toObject(Recipe.class);
 
-                            if(r != null){
-                                updatedRecipes.add(r);
-                            }
+                        if(r != null){
+                            updatedRecipes.add(r);
                         }
                     }
-
-                    recipes.setValue(updatedRecipes);
                 }
-            });
-        }
 
-        int random_int = (int)(Math.random() * (recipes.getValue().size() - 0) + 0);
+                allRecipes.setValue(updatedRecipes);
+            }
+        });
+
+        int number = allRecipes.getValue().
+
+        int random_int = (int)(Math.random() * (allRecipes - 0) + 0);
 
         if((random_int-1) < 0) {
-            todaysRecipe = recipes.getValue().get(0);
+            todaysRecipe = allRecipes.getValue().get(0);
         } else  {
-            todaysRecipe = recipes.getValue().get(random_int-1);
+            todaysRecipe = allRecipes.getValue().get(random_int-1);
         }
 
         return todaysRecipe;*/
