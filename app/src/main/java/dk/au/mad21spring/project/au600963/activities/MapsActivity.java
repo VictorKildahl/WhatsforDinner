@@ -277,8 +277,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Setting map type
         //mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        //mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        //mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
         mMap.setOnMapLongClickListener(this);
@@ -435,7 +435,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(new LatLng(tempLocation.getLatitude(), tempLocation.getLongitude()))
                         .title(tempLocation.getName())
                         .snippet(tempLocation.getDescription())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.nodinner))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.rema1000lille))
                 );
 
             }
