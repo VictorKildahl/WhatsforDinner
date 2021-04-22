@@ -46,7 +46,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     //Adding data from arraylist to the recyclerview
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        Glide.with(holder.imgRecipe.getContext()).load(recipeList.get(position).getImgUrl()).into(holder.imgRecipe);
+        if(recipeList.get(position).getImgUrl() == null){
+            Glide.with(holder.imgRecipe.getContext()).load(R.drawable.nodinner).into(holder.imgRecipe);
+        } else {
+            Glide.with(holder.imgRecipe.getContext()).load(recipeList.get(position).getImgUrl()).into(holder.imgRecipe);
+        }
+
         holder.txtRecipe.setText(recipeList.get(position).getName());
         holder.txtTime.setText("Preparation Time: " + recipeList.get(position).getTime() + " min");
     }

@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -120,7 +121,8 @@ public class HomeActivity extends AppCompatActivity {
         //recipeList.size();
 
         if(todaysRecipe == null){
-            txtRecipe.setText(getResources().getString(R.string.txtRecipe) + "\n" + getResources().getString(R.string.txtRecipe2));
+            txtRecipe.setText(getResources().getString(R.string.txtRecipe1) + "\n" + getResources().getString(R.string.txtRecipe2));
+            Glide.with(imgRecipe.getContext()).load(R.drawable.nodinner).into(imgRecipe);
         } else {
             //txtRecipe.setText(todaysRecipe.getName());
             //Glide.with(imgRecipe.getContext()).load(todaysRecipe.getImgUrl()).into(imgRecipe);

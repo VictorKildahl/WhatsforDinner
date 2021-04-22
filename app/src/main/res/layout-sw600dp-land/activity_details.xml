@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.DetailsActivity">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/purple_500"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_navigattion"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="165dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/btnDelete"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="141dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/btnBack"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgRecipe"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="50dp"
+                android:contentDescription="@string/imgRecipe"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/txtRecipe"
+                android:layout_width="700dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="75dp"
+                android:text="@string/txtRecipe"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgRecipe"
+                app:layout_constraintTop_toTopOf="@+id/imgRecipe" />
+
+            <TextView
+                android:id="@+id/txtIngrediens"
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:text="@string/txtIngrediens"
+                android:textSize="24sp"
+                app:layout_constraintStart_toEndOf="@+id/txtDescription"
+                app:layout_constraintTop_toTopOf="@+id/txtDescription" />
+
+            <TextView
+                android:id="@+id/txtDescription"
+                android:layout_width="700dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/txtDescription"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/imgRecipe"
+                app:layout_constraintTop_toBottomOf="@+id/imgRecipe" />
+
+            <TextView
+                android:id="@+id/txtTime"
+                android:layout_width="700dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/txtTime"
+                android:textSize="30sp"
+                app:layout_constraintStart_toStartOf="@+id/txtRecipe"
+                app:layout_constraintTop_toBottomOf="@+id/txtRecipe" />
+
+            <TextView
+                android:id="@+id/txtInstruction"
+                android:layout_width="700dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/txtInstruction"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="@+id/txtDescription"
+                app:layout_constraintStart_toStartOf="@+id/txtDescription"
+                app:layout_constraintTop_toBottomOf="@+id/txtDescription" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

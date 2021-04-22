@@ -19,6 +19,7 @@
     <string name="txtHeader">Whats for dinner?</string>
     <string name="txtWelcome">Welcome!</string>
     <string name="imgAvatar">Avatar</string>
-    <string name="txtRecipe">Todays dinner could not be shown.</string>
+    <string name="txtRecipe">Recipe</string>
+    <string name="txtRecipe1">Todays dinner could not be shown.</string>
     <string name="txtRecipe2">There is currently no recipes on this account.</string>
 </resources>

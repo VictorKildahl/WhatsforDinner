@@ -20,6 +20,7 @@
     <string name="txtHeader">Hvad er der til aftensmad?</string>
     <string name="txtWelcome">Velkommen!</string>
     <string name="imgAvatar">Avatar</string>
-    <string name="txtRecipe">Dagens aftensmad kan ikke vises.</string>
+    <string name="txtRecipe">Opskrift</string>
+    <string name="txtRecipe1">Dagens aftensmad kan ikke vises.</string>
     <string name="txtRecipe2">Der er ikke nogle opskrifter på denne bruger.</string>
 </resources>
