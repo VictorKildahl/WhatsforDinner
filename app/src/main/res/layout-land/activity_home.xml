@@ -8,7 +8,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:itemBackground="@color/purple_500"
         app:itemIconTint="@drawable/selector"
@@ -16,13 +16,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_navigattion" />
+        app:menu="@menu/menu_navigattion">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <TextView
         android:id="@+id/txtUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/txtUsername"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -32,33 +34,23 @@
 
     <ImageView
         android:id="@+id/imgAvatar"
-        android:layout_width="180dp"
-        android:layout_height="178dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/imgAvatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/btnLogout"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/txtHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginRight="100dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginRight="80dp"
         android:text="@string/txtHeader"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -78,9 +70,9 @@
 
     <ImageView
         android:id="@+id/imgRecipe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/imgRecipe"
         app:layout_constraintEnd_toEndOf="@+id/txtHeader"
         app:layout_constraintStart_toStartOf="@+id/txtHeader"
@@ -91,12 +83,22 @@
         android:id="@+id/txtRecipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/txtRecipe"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/imgRecipe"
         app:layout_constraintStart_toStartOf="@+id/imgRecipe"
         app:layout_constraintTop_toBottomOf="@+id/imgRecipe" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/btnLogout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
