@@ -49,7 +49,8 @@ public class Repository {
     private static Repository instance;
     private String userId;
     private MutableLiveData<Recipe> currentRecipe = new MutableLiveData<>();
-    private Recipe todaysRecipe;
+    private MutableLiveData<Recipe> todaysRecipe = new MutableLiveData<>();
+    private int random_int;
 
     public static Repository getInstance(Application application){
         if(instance == null){
@@ -340,10 +341,34 @@ public class Repository {
         return currentRecipe;
     }
 
+    /*public void getUser(String uid){
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users").document(userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        User user = new User(
+                                snapshot.get("key").toString(),
+                                snapshot.get("timestamp").toString();
+
+                        user.setUid(snapshot.getId());
+                        currentRecipe.setValue(temprecipe);
+                        Log.d(Constants.FIREBASE, "DocumentSnapshot successfully fetched!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(Constants.FIREBASE, "Error deleting document", e);
+                    }
+                });
+    }*/
+
 
     //Get random recipe from list
-    public Recipe getRandomRecipeFromList(){
-        /*MutableLiveData allRecipes = new MutableLiveData<List<Recipe>>();
+    public void getRandomRecipeFromList(){
+        MutableLiveData<List<Recipe>> allRecipes = new MutableLiveData<List<Recipe>>();
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -363,22 +388,20 @@ public class Repository {
                 }
 
                 allRecipes.setValue(updatedRecipes);
+                random_int = (int)(Math.random() * (allRecipes.getValue().size() - 0) + 0);
+
+                if((random_int-1) < 0) {
+                    todaysRecipe.setValue(allRecipes.getValue().get(0));
+
+                } else  {
+                    todaysRecipe.setValue(allRecipes.getValue().get(random_int-1));
+                }
             }
         });
+    }
 
-        int number = allRecipes.getValue().
-
-        int random_int = (int)(Math.random() * (allRecipes - 0) + 0);
-
-        if((random_int-1) < 0) {
-            todaysRecipe = allRecipes.getValue().get(0);
-        } else  {
-            todaysRecipe = allRecipes.getValue().get(random_int-1);
-        }
-
-        return todaysRecipe;*/
-
-        return null;
+    public LiveData<Recipe> getTodaysRecipe(){
+        return todaysRecipe;
     }
 
     //Delete clicked Recipe

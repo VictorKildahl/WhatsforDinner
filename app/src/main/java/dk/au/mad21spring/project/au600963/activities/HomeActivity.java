@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import dk.au.mad21spring.project.au600963.R;
+import dk.au.mad21spring.project.au600963.constants.Constants;
 import dk.au.mad21spring.project.au600963.model.Recipe;
 import dk.au.mad21spring.project.au600963.viewmodels.DetailViewModel;
 import dk.au.mad21spring.project.au600963.viewmodels.HomeViewModel;
@@ -77,6 +79,21 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        hvm.getTodaysRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(Recipe recipe) {
+                todaysRecipe = recipe;
+
+                if(todaysRecipe == null){
+                    txtRecipe.setText(getResources().getString(R.string.txtRecipe1) + "\n" + getResources().getString(R.string.txtRecipe2));
+                    Glide.with(imgRecipe.getContext()).load(R.drawable.nodinner).into(imgRecipe);
+                } else {
+                    txtRecipe.setText(todaysRecipe.getName());
+                    Glide.with(imgRecipe.getContext()).load(todaysRecipe.getImgUrl()).into(imgRecipe);
+                }
+            }
+        });
+
         //Handling what happens when clicking button "Logout"
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,19 +131,18 @@ public class HomeActivity extends AppCompatActivity {
         updateUI();
     }
 
+    /*@Override
+    protected void onStop() {
+        SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS_FOR_CLICKS, MODE_PRIVATE).edit();
+        editor.putInt(CLICK_COUNT, buttonClicks);
+        editor.apply();
+        Log.d(TAG, "onStop: Saved click count to sharedprefs at: " + buttonClicks);
+        super.onStop();
+    }*/
+
     //Sets todays recipe information
     private void getTodaysRecipe() {
-        //LiveData<List<Recipe>> todaysRecipe = hvm.getRecipeList();
-        //todaysRecipe.getValue().size();
-        //recipeList.size();
-
-        if(todaysRecipe == null){
-            txtRecipe.setText(getResources().getString(R.string.txtRecipe1) + "\n" + getResources().getString(R.string.txtRecipe2));
-            Glide.with(imgRecipe.getContext()).load(R.drawable.nodinner).into(imgRecipe);
-        } else {
-            //txtRecipe.setText(todaysRecipe.getName());
-            //Glide.with(imgRecipe.getContext()).load(todaysRecipe.getImgUrl()).into(imgRecipe);
-        }
+        hvm.getRandomRecipeFromList();
     }
 
     //Set information from google login

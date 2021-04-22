@@ -13,6 +13,8 @@ public class Constants {
     public static final String SERVICE = "ForegroundService";
     public static final String SERVICE_CHANNEL = "serviceChannel";
     public static final String FIREBASE = "Firebase";
+    public static final String SHARED_PREFS_DAY = "SHARED_PREFS_DAY";
+    public static final String GOT_TODAY_RECIPE = "GOT_TODAY_RECIPE";
 
     public static final String EXTRA_USER_LATITUDE = "location_latitude";
     public static final String EXTRA_USER_LONGITUDE = "location_longitude";

@@ -20,12 +20,16 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     //Gets a random recipe that is already in the list
-    public Recipe getRandomRecipeFromList() {
-         return repository.getRandomRecipeFromList();
+    public void getRandomRecipeFromList() {
+         repository.getRandomRecipeFromList();
     }
 
     //Gets a list of all recipes
     public LiveData<List<Recipe>> getRecipeList() {
         return repository.getRecipes();
+    }
+
+    public LiveData<Recipe> getTodaysRecipe() {
+        return repository.getTodaysRecipe();
     }
 }

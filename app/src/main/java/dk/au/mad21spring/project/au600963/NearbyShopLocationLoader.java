@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import dk.au.mad21spring.project.au600963.NearbyShopLocation;
 
 
-/**
- * Created by kasper on 06/05/15.
- */
+//Code from TheArnieExerciseFinder code demo, L9 Sensors, Location and Maps
 public class NearbyShopLocationLoader {
     Activity activity;
 
@@ -35,8 +33,9 @@ public class NearbyShopLocationLoader {
                 String[] items = line.split(",");
                 if(items.length==3){
                     try {
-                        temp = new NearbyShopLocation(Double.parseDouble(items[1]), Double.parseDouble(items[0]), items[2], "All it takes is all you've got!");
+                        temp = new NearbyShopLocation(Double.parseDouble(items[1]), Double.parseDouble(items[0]), items[2], "Rema1000");
                         locations.add(temp);
+                        Log.d("asd", "LOCATIONS: " + locations);
                     } catch (NumberFormatException ex) {
                         Log.e("ERROR", "Bad format of number, ex");
                     } catch (NullPointerException ex) {

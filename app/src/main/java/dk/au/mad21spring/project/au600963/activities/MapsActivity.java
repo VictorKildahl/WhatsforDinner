@@ -137,7 +137,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         NearbyShopLocationLoader loader = new NearbyShopLocationLoader(this);
         nearbyShopLocations = loader.getNearbyShopLocationList();
-        showNearbyShops();
     }
 
     @Override
@@ -330,6 +329,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
+        showNearbyShops();
+
     }
 
     //enabling userlocation button
@@ -434,7 +435,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(new LatLng(tempLocation.getLatitude(), tempLocation.getLongitude()))
                         .title(tempLocation.getName())
                         .snippet(tempLocation.getDescription())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rema_1000))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.nodinner))
                 );
 
             }

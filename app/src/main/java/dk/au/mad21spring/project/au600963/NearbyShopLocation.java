@@ -1,8 +1,6 @@
 package dk.au.mad21spring.project.au600963;
 
 //Code from TheArnieExerciseFinder code demo, L9 Sensors, Location and Maps
-
-
 public class NearbyShopLocation {
         private double latitude;
         private double longitude;
