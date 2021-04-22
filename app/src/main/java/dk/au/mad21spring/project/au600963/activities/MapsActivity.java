@@ -48,6 +48,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import dk.au.mad21spring.project.au600963.NearbyShopLocation;
+import dk.au.mad21spring.project.au600963.NearbyShopLocationLoader;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,6 +68,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean userLocationKnown = false;
     private boolean tracing = true;
     private boolean showingExercises = false;
+
+    ArrayList<NearbyShopLocation> nearbyShopLocations;
 
     private Geocoder geocoder;
 
@@ -130,7 +135,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        //setUpMapIfNeeded();
+        NearbyShopLocationLoader loader = new NearbyShopLocationLoader(this);
+        nearbyShopLocations = loader.getNearbyShopLocationList();
+        showNearbyShops();
     }
 
     @Override
@@ -264,31 +271,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    /*
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //LocalBroadcastManager.getInstance(this).registerReceiver(locationUpdateReceiver, new IntentFilter("LOCATION_UPDATE"));
-        setUpMapIfNeeded();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //LocalBroadcastManager.getInstance(this).unregisterReceiver(locationUpdateReceiver);
-    }
-
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            //mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();   //this is the old way
-            ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);  //this is the new way
-        }
-    }
-
-    */
-
     //the new asynch way of getting the map
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -296,8 +278,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Setting map type
         //mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        //mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        //mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
         mMap.setOnMapLongClickListener(this);
@@ -431,6 +413,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void showNearbyShops(){
+
+        //showingExercises = true;
+        if(nearbyShopLocations!=null && nearbyShopLocations.size()>0){
+
+            NearbyShopLocation tempLocation;
+            LatLngBounds bounds;
+            LatLngBounds.Builder allExercisePlaces = new LatLngBounds.Builder();
+            for(int i=0; i<nearbyShopLocations.size(); i++) {
+                tempLocation = nearbyShopLocations.get(i);
+                //calc bounding box
+                allExercisePlaces.include(new LatLng(tempLocation.getLatitude(), tempLocation.getLongitude()));
+
+                //add markers
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(tempLocation.getLatitude(), tempLocation.getLongitude()))
+                        .title(tempLocation.getName())
+                        .snippet(tempLocation.getDescription())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rema_1000))
+                );
+
+            }
+            bounds = allExercisePlaces.build();
+
+            //use bounding box to zoom properly
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
         }
     }
 
