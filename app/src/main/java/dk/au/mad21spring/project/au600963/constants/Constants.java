@@ -7,6 +7,8 @@ public class Constants {
     public static final int REQUEST_CODE_DELETE = 104;
     public static final int REQUEST_CODE_LOGIN = 105;
     public static final int NOTIFICATION_ID = 42;
+    public static final int LOCATION_REQUEST_CODE = 10001;
+    public static final int ACCES_LOCATION_REQUESTCODE = 10002;
 
     public static final String TAG = "MainActivity";
     public static final String UID = "UID";
@@ -18,4 +20,6 @@ public class Constants {
 
     public static final String EXTRA_USER_LATITUDE = "location_latitude";
     public static final String EXTRA_USER_LONGITUDE = "location_longitude";
+
+    private static final String TAG_MAPS = "MapsActivity";
 }
