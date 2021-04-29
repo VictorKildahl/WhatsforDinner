@@ -51,10 +51,8 @@ public class HomeActivity extends AppCompatActivity {
     private TextView txtUsername, txtHeader, txtWelcome, txtRecipe;
     private Button btnLogout;
     private FirebaseAuth auth;
-    private List<Recipe> recipeList;
     private HomeViewModel hvm;
     private Recipe todaysRecipe;
-    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +95,6 @@ public class HomeActivity extends AppCompatActivity {
 
         hvm.getUser();
         updateUI();
-
 
         //Handling what happens when clicking button "Logout"
         btnLogout.setOnClickListener(new View.OnClickListener() {

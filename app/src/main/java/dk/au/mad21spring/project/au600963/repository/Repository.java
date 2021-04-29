@@ -346,6 +346,7 @@ public class Repository {
         return currentRecipe;
     }
 
+    //Gets user from firebase
     public void getUser(){
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore.getInstance().collection("users").document(userId)
@@ -366,8 +367,6 @@ public class Repository {
                         } else {
                             addUser();
                         }
-
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -380,31 +379,18 @@ public class Repository {
 
     //checks if it is a new day
     public void checkIfNewDay() {
-        /*if(currentUser.getValue() == null){
-            addUser();
-        } else {
-            long timestamp = currentUser.getValue().getTimestamp();
-            long now = System.currentTimeMillis();
-            long dif = now - timestamp;
-
-            if(dif > 10*60*1000){
-                getRandomRecipeFromList();
-            } else {
-                getTodaysRecipeFromUser(currentUser.getValue().getTodaysDinner());
-            }
-        }*/
-
         long timestamp = currentUser.getValue().getTimestamp();
         long now = System.currentTimeMillis();
         long dif = now - timestamp;
 
-        if(dif > 10*60*1000){ //10*60*1000
+        if(dif > 10*60*1000){
             getRandomRecipeFromList();
         } else {
             getTodaysRecipeFromUser(currentUser.getValue().getTodaysDinner());
         }
     }
 
+    //Adds todaysdinner and timestamp to userid
     public void addUser(){
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -413,32 +399,6 @@ public class Repository {
         newUser.put("timestamp", 1);
 
         FirebaseFirestore.getInstance().collection("users").document(userId).set(newUser, SetOptions.merge());
-
-        //FirebaseFirestore.getInstance().collection("users").document(userId).update(newUser);
-
-        /*DocumentReference userDoc = FirebaseFirestore.getInstance().collection("users").document(userId);
-        userDoc.update("todaysDinner", "");
-        userDoc.update("timestamp", 1);*/
-
-        /*
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put("todaysDinner", "");
-        newUser.put("timestamp", 1);
-
-        FirebaseFirestore.getInstance().collection("users/")
-                .add(newUser)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(Constants.FIREBASE, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(Constants.FIREBASE, "Error adding document", e);
-                    }
-                });*/
     }
 
     //Get random recipe from list
@@ -467,11 +427,9 @@ public class Repository {
 
                     if((random_int-1) < 0) {
                         todaysRecipe.setValue(allRecipes.getValue().get(0));
-                        //currentUser.setValue(new User(allRecipes.getValue().get(0).uid, System.currentTimeMillis()));
                         updateUser(allRecipes.getValue().get(0).uid, System.currentTimeMillis());
                     } else  {
                         todaysRecipe.setValue(allRecipes.getValue().get(random_int-1));
-                        //currentUser.setValue(new User(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis()));
                         updateUser(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis());
                     }
                 } else {
@@ -481,6 +439,7 @@ public class Repository {
         });
     }
 
+    //Updates user when its time for new todaysdinner
     public void updateUser(String todaysDinner, long timestamp){
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -525,6 +484,7 @@ public class Repository {
                 });
     }
 
+    //gets todaysrecipe
     public LiveData<Recipe> getTodaysRecipe(){
         return todaysRecipe;
     }
@@ -534,81 +494,5 @@ public class Repository {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").document(uid).delete();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ///////SERVICE METHODS START/////////
-    //Gets the recipes from the db and calls serviceLoadData
-    /*public void serviceUpdate(){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Recipe> recipesUpdate = recipes.getValue();
-
-                for (int i = 0; i < recipesUpdate.size(); i++){
-                    serviceLoadData(recipesUpdate.get(i).getName());
-                }
-            }
-        });
-
-    }
-
-    //Makes the url to update the recipes in the list
-    private void serviceLoadData(String recipeName) {
-        String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=fa4d67d553e14a638d11145e3db60a61&addRecipeInformation=true&number=1";
-        serviceSendRequest(dataUrl);
-    }
-
-    //Makes the request to the Recipe API for the current cities
-    private void serviceSendRequest(String dataUrl) {
-        if(queue == null){
-            queue = Volley.newRequestQueue(context);
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, dataUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response){
-                Log.d(Constants.TAG, "Recipe information: " + response);
-                serviceParseJson(response);
-            }
-        }, new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error){
-                Log.e(Constants.TAG, "That did not work!", error);
-                Toast.makeText(context, "The recipe could not be found", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        queue.add(stringRequest);
-    }
-
-    //Updates the current cities with the new data
-    private void serviceParseJson(String json) {
-        Gson gson = new GsonBuilder().create();
-        Result result = gson.fromJson(json, Result.class);
-        if(result != null){
-            Recipe recipe = new Recipe(result.getTitle(), String.valueOf(result.getReadyInMinutes()), "ingrediens", "test", result.getSummary(), result.getImage());
-
-            Log.d(TAG, "updated recipe: " + recipe.getName());
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    db.recipeDAO().updateRecipe(recipe);
-                }
-            });
-        }
-    }*/
-    ///////SERVICE METHODS END/////////
-
 }
+

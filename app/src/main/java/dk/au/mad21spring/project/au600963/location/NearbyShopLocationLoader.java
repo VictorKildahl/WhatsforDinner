@@ -1,4 +1,4 @@
-package dk.au.mad21spring.project.au600963;
+package dk.au.mad21spring.project.au600963.location;
 
 import android.app.Activity;
 import android.util.Log;
@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import dk.au.mad21spring.project.au600963.NearbyShopLocation;
+import dk.au.mad21spring.project.au600963.location.NearbyShopLocation;
 
 
 //Code from TheArnieExerciseFinder code demo, L9 Sensors, Location and Maps

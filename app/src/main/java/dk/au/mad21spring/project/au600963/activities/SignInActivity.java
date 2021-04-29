@@ -35,16 +35,13 @@ import java.util.List;
 import dk.au.mad21spring.project.au600963.R;
 import dk.au.mad21spring.project.au600963.constants.Constants;
 
+//Code is inspired by this article: https://firebase.google.com/docs/auth/android/google-signin
 public class SignInActivity extends AppCompatActivity {
-
     //Ui widgets and variables
     private Button btnSignIn;
     private FirebaseAuth auth;
-
-
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 234;
-
 
     //Tag for the logs optional
     private static final String TAG = "simplifiedcoding";
@@ -53,12 +50,6 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
-        //Firebase
-        /*if(auth == null){
-            //Firebase Auth
-            auth = FirebaseAuth.getInstance();
-        }*/
 
         auth = FirebaseAuth.getInstance();
 
@@ -90,20 +81,12 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
-
-
-
 
         //Handling what happens when clicking button "SignIn"
         btnSignIn = findViewById(R.id.btnSignIn);
@@ -129,16 +112,6 @@ public class SignInActivity extends AppCompatActivity {
 
             //starting the activity for result
             startActivityForResult(signInIntent, RC_SIGN_IN);
-
-
-
-
-
-            /*List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.GoogleBuilder().build()
-            );
-
-            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), Constants.REQUEST_CODE_LOGIN);*/
         }
     }
 

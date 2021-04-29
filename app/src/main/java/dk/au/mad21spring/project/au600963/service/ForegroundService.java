@@ -71,7 +71,6 @@ public class ForegroundService extends Service {
         return START_STICKY;
     }
 
-
     //Initate the background work - only start if not already started
     private void doBackgroundStuff() {
         if(!started) {
