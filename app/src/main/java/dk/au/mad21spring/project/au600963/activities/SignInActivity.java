@@ -34,6 +34,7 @@ import java.util.List;
 
 import dk.au.mad21spring.project.au600963.R;
 import dk.au.mad21spring.project.au600963.constants.Constants;
+import dk.au.mad21spring.project.au600963.repository.Repository;
 
 //Code is inspired by this article: https://firebase.google.com/docs/auth/android/google-signin
 public class SignInActivity extends AppCompatActivity {
@@ -41,10 +42,6 @@ public class SignInActivity extends AppCompatActivity {
     private Button btnSignIn;
     private FirebaseAuth auth;
     private GoogleSignInClient mGoogleSignInClient;
-    private static final int RC_SIGN_IN = 234;
-
-    //Tag for the logs optional
-    private static final String TAG = "simplifiedcoding";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +108,7 @@ public class SignInActivity extends AppCompatActivity {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
 
             //starting the activity for result
-            startActivityForResult(signInIntent, RC_SIGN_IN);
+            startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
         }
     }
 
@@ -124,7 +121,7 @@ public class SignInActivity extends AppCompatActivity {
             goToApp();
         }
 
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == Constants.RC_SIGN_IN) {
 
             //Getting the GoogleSignIn Task
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -141,8 +138,6 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
         //getting the auth credential
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
@@ -152,13 +147,13 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.d("Firebase", "signInWithCredential:success");
                             FirebaseUser user = auth.getCurrentUser();
                             Toast.makeText(SignInActivity.this, "User Signed In", Toast.LENGTH_SHORT).show();
                             goToApp();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Log.w("Firebase", "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
