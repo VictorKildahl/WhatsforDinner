@@ -134,6 +134,11 @@ public class HomeActivity extends AppCompatActivity {
 
     //Set information from google login
     private void updateUI() {
+        if(todaysRecipe == null){
+            txtRecipe.setText(getResources().getString(R.string.txtRecipe1) + "\n" + getResources().getString(R.string.txtRecipe2));
+            Glide.with(imgRecipe.getContext()).load(R.drawable.nodinner).into(imgRecipe);
+        }
+
         Glide.with(imgAvatar.getContext()).load(user.getPhotoUrl()).into(imgAvatar);
         txtWelcome.setText(getResources().getString(R.string.txtWelcome));
         txtUsername.setText(user.getEmail());

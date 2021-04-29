@@ -398,7 +398,7 @@ public class Repository {
         long now = System.currentTimeMillis();
         long dif = now - timestamp;
 
-        if(dif > 10*60*1000){
+        if(dif > 10*60*1000){ //10*60*1000
             getRandomRecipeFromList();
         } else {
             getTodaysRecipeFromUser(currentUser.getValue().getTodaysDinner());
@@ -474,6 +474,8 @@ public class Repository {
                         //currentUser.setValue(new User(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis()));
                         updateUser(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis());
                     }
+                } else {
+                    todaysRecipe.setValue(null);
                 }
             }
         });
