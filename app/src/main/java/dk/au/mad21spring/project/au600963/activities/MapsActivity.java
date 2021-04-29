@@ -40,13 +40,25 @@ import java.util.ArrayList;
 import dk.au.mad21spring.project.au600963.R;
 import dk.au.mad21spring.project.au600963.constants.Constants;
 
+//  Demos used to code MAP-functionality
+//  https://www.youtube.com/watch?v=rNYaEFl6Fms&list=PLdHg5T0SNpN3GBUmpGqjiKGMcBaRT2A-m&index=1&t=4s    // GetLocation
+//  https://www.youtube.com/watch?v=4eWoXPSpA5Y&list=PLdHg5T0SNpN3GBUmpGqjiKGMcBaRT2A-m&index=2         // Request Location Updates
+//  https://www.youtube.com/watch?v=GT-Br9iIqC0&list=PLdHg5T0SNpN3GBUmpGqjiKGMcBaRT2A-m&index=3         // Google Map
+//  https://www.youtube.com/watch?v=mBOCAHsGkzs&list=PLdHg5T0SNpN3GBUmpGqjiKGMcBaRT2A-m&index=6         // Get user location in maps
+
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
+    //array of nearby shops
     ArrayList<NearbyShopLocation> nearbyShopLocations;
+
+    //To use Google play location services API we use FusedLocationProviderClient
     FusedLocationProviderClient fusedLocationProviderClient;
+    //To get LocationUpdates
     LocationRequest locationRequest;
+
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -68,12 +80,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //initialize fusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         //Location updates
+        //init
         locationRequest = locationRequest.create();
+        //how often to get location updates
         locationRequest.setInterval(4000);
+        //should be able to provide updates every 2 seconds
         locationRequest.setFastestInterval(2000);
+
         locationRequest.setPriority(locationRequest.PRIORITY_HIGH_ACCURACY);
 
         //Bottom Navigation
@@ -100,10 +117,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        //used for load in nearby shops
         NearbyShopLocationLoader loader = new NearbyShopLocationLoader(this);
         nearbyShopLocations = loader.getNearbyShopLocationList();
     }
 
+    //Method start locationUpdates
     @Override
     protected void onStart() {
         super.onStart();
@@ -114,12 +133,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    //Method stop locationUpdates
     @Override
     protected void onStop() {
         super.onStop();
         stopLocationUpdates();
     }
 
+    //check if settings is correct, and start of location updates
     private void checkSettingsAndStartLocationUpdates() {
         LocationSettingsRequest request = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build();
         SettingsClient client = LocationServices.getSettingsClient(this);
@@ -158,10 +179,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
+    //Method asking for location permission
     private void askLocationPermission() {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Log.d(Constants.TAG, "askLocationPermission: you should show an alert dialog");
                 ActivityCompat.requestPermissions(this, new String[]{
                         Manifest.permission.ACCESS_FINE_LOCATION
                 }, Constants.LOCATION_REQUEST_CODE);
@@ -173,6 +194,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    //Method calling other methods if permission granted
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == Constants.LOCATION_REQUEST_CODE) {
