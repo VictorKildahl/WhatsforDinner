@@ -27,9 +27,8 @@ public class ForegroundService extends Service {
     private ExecutorService execService;    //ExecutorService for running things off the main thread
     private boolean started = false;        //Indicating if Service is startet
     private Repository repository;
-    private List<Recipe> recipeList;
-    private Recipe notificationRecipe;
     private Context context;
+    private Recipe todaysRecipe;
 
     //Constructor
     public ForegroundService() {
@@ -100,18 +99,8 @@ public class ForegroundService extends Service {
                     Log.e(Constants.SERVICE, "run: EROOR", e);
                 }
 
-                //Call to the repository that updates the cities in the list
-                //repository.serviceUpdate();
-
-                //Finding random Recipe for notification
-                recipeList = repository.recipes.getValue();
-                int random_int = (int)(Math.random() * (recipeList.size() - 0) + 0);
-
-                if((random_int-1) < 0) {
-                    notificationRecipe = recipeList.get(0);
-                } else  {
-                    notificationRecipe = recipeList.get(random_int-1);
-                }
+                //Gets todyas dinner
+                todaysRecipe = repository.getTodaysRecipe().getValue();
 
                 //Notification manager
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -119,7 +108,7 @@ public class ForegroundService extends Service {
                 //Notification
                 Notification notification = new NotificationCompat.Builder(context, Constants.SERVICE_CHANNEL)
                         .setContentTitle("What's for Dinner?")
-                        .setContentText("Today's meal: " + notificationRecipe.getName())
+                        .setContentText("Today's meal: " + todaysRecipe.getName())
                         .setSmallIcon(R.drawable.ic_recipeservice)
                         .setTicker("Recipe")
                         .build();

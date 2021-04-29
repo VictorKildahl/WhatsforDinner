@@ -66,10 +66,6 @@ public class ListActivity extends AppCompatActivity implements RecipeAdapter.IRe
             }
         });
 
-        //Start service
-        Intent foregroundServiceIntent = new Intent(this, ForegroundService.class);
-        startService(foregroundServiceIntent);
-
         //Handling what happens when clicking button "add"
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override

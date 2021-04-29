@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,6 +38,8 @@ import java.util.concurrent.Executors;
 import dk.au.mad21spring.project.au600963.R;
 import dk.au.mad21spring.project.au600963.constants.Constants;
 import dk.au.mad21spring.project.au600963.model.Recipe;
+import dk.au.mad21spring.project.au600963.model.User;
+import dk.au.mad21spring.project.au600963.service.ForegroundService;
 import dk.au.mad21spring.project.au600963.viewmodels.DetailViewModel;
 import dk.au.mad21spring.project.au600963.viewmodels.HomeViewModel;
 
@@ -51,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
     private List<Recipe> recipeList;
     private HomeViewModel hvm;
     private Recipe todaysRecipe;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +70,16 @@ public class HomeActivity extends AppCompatActivity {
         txtRecipe = findViewById(R.id.txtRecipe);
         btnLogout = findViewById(R.id.btnLogout);
 
+        //Start service
+        Intent foregroundServiceIntent = new Intent(this, ForegroundService.class);
+        startService(foregroundServiceIntent);
+
         //Firebase
         auth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        //Viewmodel
+        //Viewmodel and update UI
         hvm = new ViewModelProvider(this).get(HomeViewModel.class);
-        hvm.getRecipeList().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(List<Recipe> recipes) {
-                recipeList = recipes;
-            }
-        });
-
         hvm.getTodaysRecipe().observe(this, new Observer<Recipe>() {
             @Override
             public void onChanged(Recipe recipe) {
@@ -93,6 +94,17 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+        
+        /*if(currentUser == null){
+            hvm.getUser();
+        } else {
+            hvm.checkIfNewDay();
+        }*/
+        //hvm.checkIfNewDay();
+        hvm.getUser();
+        updateUI();
+
 
         //Handling what happens when clicking button "Logout"
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -125,24 +137,6 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        //Update UI
-        getTodaysRecipe();
-        updateUI();
-    }
-
-    /*@Override
-    protected void onStop() {
-        SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS_FOR_CLICKS, MODE_PRIVATE).edit();
-        editor.putInt(CLICK_COUNT, buttonClicks);
-        editor.apply();
-        Log.d(TAG, "onStop: Saved click count to sharedprefs at: " + buttonClicks);
-        super.onStop();
-    }*/
-
-    //Sets todays recipe information
-    private void getTodaysRecipe() {
-        hvm.getRandomRecipeFromList();
     }
 
     //Set information from google login

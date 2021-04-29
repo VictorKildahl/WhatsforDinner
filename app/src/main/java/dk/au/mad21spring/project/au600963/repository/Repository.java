@@ -18,10 +18,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,19 +39,21 @@ import java.util.concurrent.Executors;
 
 import dk.au.mad21spring.project.au600963.constants.Constants;
 import dk.au.mad21spring.project.au600963.model.Recipe;
+import dk.au.mad21spring.project.au600963.model.User;
 import dk.au.mad21spring.project.au600963.model.randomrecipe.RandomRecipe;
 import dk.au.mad21spring.project.au600963.model.recipe.Result;
 
 public class Repository {
 
     public MutableLiveData<List<Recipe>> recipes;
+    private MutableLiveData<Recipe> currentRecipe = new MutableLiveData<>();
+    private MutableLiveData<Recipe> todaysRecipe = new MutableLiveData<>();
+    private MutableLiveData<User> currentUser = new MutableLiveData<>();
+    private static Repository instance;
     private ExecutorService executor;           //for async processing
     private RequestQueue queue;
     private Context context;
-    private static Repository instance;
     private String userId;
-    private MutableLiveData<Recipe> currentRecipe = new MutableLiveData<>();
-    private MutableLiveData<Recipe> todaysRecipe = new MutableLiveData<>();
     private int random_int;
 
     public static Repository getInstance(Application application){
@@ -107,7 +111,7 @@ public class Repository {
     //Making URL to Recipe API
     private void loadData(String recipeName) {
         //If the api dosn't work try one of these API Keys:
-        // kildahl 01: fa4d67d553e14a638d11145e3db60a61
+        //kildahl 01: fa4d67d553e14a638d11145e3db60a61
         //kildahl 02: bd2e943f6c2f411586df06712425fce9
         recipeName = recipeName.replace(" ", "_");
         String dataUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + recipeName + "&apiKey=bd2e943f6c2f411586df06712425fce9&addRecipeInformation=true&number=1";
@@ -341,20 +345,28 @@ public class Repository {
         return currentRecipe;
     }
 
-    /*public void getUser(String uid){
+    public void getUser(){
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore.getInstance().collection("users").document(userId)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot snapshot) {
-                        User user = new User(
-                                snapshot.get("key").toString(),
-                                snapshot.get("timestamp").toString();
+                        if(snapshot.contains("timestamp") && snapshot.contains("todaysDinner")) {
+                            User tempuser = new User(
+                                    snapshot.get("todaysDinner").toString(),
+                                    Long.valueOf(snapshot.get("timestamp").toString()));
 
-                        user.setUid(snapshot.getId());
-                        currentRecipe.setValue(temprecipe);
-                        Log.d(Constants.FIREBASE, "DocumentSnapshot successfully fetched!");
+                            tempuser.setUid(snapshot.getId());
+                            currentUser.setValue(tempuser);
+                            Log.d(Constants.FIREBASE, "DocumentSnapshot successfully fetched!");
+
+                            checkIfNewDay();
+                        } else {
+                            addUser();
+                        }
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -363,15 +375,74 @@ public class Repository {
                         Log.w(Constants.FIREBASE, "Error deleting document", e);
                     }
                 });
-    }*/
+    }
 
+    //checks if it is a new day
+    public void checkIfNewDay() {
+        /*if(currentUser.getValue() == null){
+            addUser();
+        } else {
+            long timestamp = currentUser.getValue().getTimestamp();
+            long now = System.currentTimeMillis();
+            long dif = now - timestamp;
+
+            if(dif > 10*60*1000){
+                getRandomRecipeFromList();
+            } else {
+                getTodaysRecipeFromUser(currentUser.getValue().getTodaysDinner());
+            }
+        }*/
+
+        long timestamp = currentUser.getValue().getTimestamp();
+        long now = System.currentTimeMillis();
+        long dif = now - timestamp;
+
+        if(dif > 10*60*1000){
+            getRandomRecipeFromList();
+        } else {
+            getTodaysRecipeFromUser(currentUser.getValue().getTodaysDinner());
+        }
+    }
+
+    public void addUser(){
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        /*Map<String, Object> newUser = new HashMap<>();
+        newUser.put("todaysDinner", "");
+        newUser.put("timestamp", 1);
+
+        FirebaseFirestore.getInstance().collection("users").document(userId).update(newUser);*/
+
+        DocumentReference userDoc = FirebaseFirestore.getInstance().collection("users").document(userId);
+        userDoc.update("todaysDinner", "");
+        userDoc.update("timestamp", 1);
+
+        /*
+        Map<String, Object> newUser = new HashMap<>();
+        newUser.put("todaysDinner", "");
+        newUser.put("timestamp", 1);
+
+        FirebaseFirestore.getInstance().collection("users/")
+                .add(newUser)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(Constants.FIREBASE, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(Constants.FIREBASE, "Error adding document", e);
+                    }
+                });*/
+    }
 
     //Get random recipe from list
     public void getRandomRecipeFromList(){
         MutableLiveData<List<Recipe>> allRecipes = new MutableLiveData<List<Recipe>>();
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException error) {
@@ -392,12 +463,57 @@ public class Repository {
 
                 if((random_int-1) < 0) {
                     todaysRecipe.setValue(allRecipes.getValue().get(0));
-
+                    //currentUser.setValue(new User(allRecipes.getValue().get(0).uid, System.currentTimeMillis()));
+                    updateUser(allRecipes.getValue().get(0).uid, System.currentTimeMillis());
                 } else  {
                     todaysRecipe.setValue(allRecipes.getValue().get(random_int-1));
+                    //currentUser.setValue(new User(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis()));
+                    updateUser(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis());
                 }
             }
         });
+    }
+
+    public void updateUser(String todaysDinner, long timestamp){
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if(todaysDinner != null){
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("todaysDinner", todaysDinner);
+            userData.put("timestamp", timestamp);
+
+            FirebaseFirestore.getInstance().collection("users").document(userId).update(userData);
+            getTodaysRecipeFromUser(todaysDinner);
+        }
+    }
+
+    //Get clicked recipe
+    public void getTodaysRecipeFromUser(String uid){
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users/" + userId + "/recipes").document(uid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        Recipe temprecipe = new Recipe(
+                                snapshot.get("name").toString(),
+                                snapshot.get("time").toString(),
+                                snapshot.get("ingrediens").toString(),
+                                snapshot.get("instruction").toString(),
+                                snapshot.get("description").toString(),
+                                snapshot.get("imgUrl").toString());
+
+                        temprecipe.setUid(snapshot.getId());
+                        todaysRecipe.setValue(temprecipe);
+                        Log.d(Constants.FIREBASE, "DocumentSnapshot successfully fetched!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(Constants.FIREBASE, "Error deleting document", e);
+                    }
+                });
     }
 
     public LiveData<Recipe> getTodaysRecipe(){

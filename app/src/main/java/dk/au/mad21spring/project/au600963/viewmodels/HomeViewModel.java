@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import dk.au.mad21spring.project.au600963.model.User;
 import dk.au.mad21spring.project.au600963.repository.Repository;
 import dk.au.mad21spring.project.au600963.model.Recipe;
 
@@ -20,8 +21,8 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     //Gets a random recipe that is already in the list
-    public void getRandomRecipeFromList() {
-         repository.getRandomRecipeFromList();
+    public void checkIfNewDay() {
+         repository.checkIfNewDay();
     }
 
     //Gets a list of all recipes
@@ -31,5 +32,15 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<Recipe> getTodaysRecipe() {
         return repository.getTodaysRecipe();
+    }
+
+    public void getUser() {
+        repository.getUser();
+    }
+
+
+    //Gets information about the todays recipe
+    public LiveData<Recipe> getCurrentRecipe() {
+        return repository.getCurrentRecipe();
     }
 }
