@@ -115,13 +115,6 @@ public class ForegroundService extends Service {
 
                 notificationManager.notify(Constants.NOTIFICATION_ID, notification);
 
-                try {
-                    Thread.sleep(86400000);     //we can sleep, because this code is not run on main thread
-                    Log.d(Constants.SERVICE, "1 day have passed");
-                } catch (InterruptedException e) {
-                    Log.e(Constants.SERVICE, "run: EROOR", e);
-                }
-
                 //The recursive bit - if started still true, call self again
                 if(started) {
                     doRecursiveWork();

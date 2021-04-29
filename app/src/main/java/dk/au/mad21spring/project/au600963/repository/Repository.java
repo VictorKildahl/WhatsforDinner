@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -407,15 +408,17 @@ public class Repository {
     public void addUser(){
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        /*Map<String, Object> newUser = new HashMap<>();
+        Map<String, Object> newUser = new HashMap<>();
         newUser.put("todaysDinner", "");
         newUser.put("timestamp", 1);
 
-        FirebaseFirestore.getInstance().collection("users").document(userId).update(newUser);*/
+        FirebaseFirestore.getInstance().collection("users").document(userId).set(newUser, SetOptions.merge());
 
-        DocumentReference userDoc = FirebaseFirestore.getInstance().collection("users").document(userId);
+        //FirebaseFirestore.getInstance().collection("users").document(userId).update(newUser);
+
+        /*DocumentReference userDoc = FirebaseFirestore.getInstance().collection("users").document(userId);
         userDoc.update("todaysDinner", "");
-        userDoc.update("timestamp", 1);
+        userDoc.update("timestamp", 1);*/
 
         /*
         Map<String, Object> newUser = new HashMap<>();
@@ -459,16 +462,18 @@ public class Repository {
                 }
 
                 allRecipes.setValue(updatedRecipes);
-                random_int = (int)(Math.random() * (allRecipes.getValue().size() - 0) + 0);
+                if(updatedRecipes.size() != 0){
+                    random_int = (int)(Math.random() * (allRecipes.getValue().size() - 0) + 0);
 
-                if((random_int-1) < 0) {
-                    todaysRecipe.setValue(allRecipes.getValue().get(0));
-                    //currentUser.setValue(new User(allRecipes.getValue().get(0).uid, System.currentTimeMillis()));
-                    updateUser(allRecipes.getValue().get(0).uid, System.currentTimeMillis());
-                } else  {
-                    todaysRecipe.setValue(allRecipes.getValue().get(random_int-1));
-                    //currentUser.setValue(new User(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis()));
-                    updateUser(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis());
+                    if((random_int-1) < 0) {
+                        todaysRecipe.setValue(allRecipes.getValue().get(0));
+                        //currentUser.setValue(new User(allRecipes.getValue().get(0).uid, System.currentTimeMillis()));
+                        updateUser(allRecipes.getValue().get(0).uid, System.currentTimeMillis());
+                    } else  {
+                        todaysRecipe.setValue(allRecipes.getValue().get(random_int-1));
+                        //currentUser.setValue(new User(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis()));
+                        updateUser(allRecipes.getValue().get(random_int-1).uid, System.currentTimeMillis());
+                    }
                 }
             }
         });
@@ -495,17 +500,19 @@ public class Repository {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot snapshot) {
-                        Recipe temprecipe = new Recipe(
-                                snapshot.get("name").toString(),
-                                snapshot.get("time").toString(),
-                                snapshot.get("ingrediens").toString(),
-                                snapshot.get("instruction").toString(),
-                                snapshot.get("description").toString(),
-                                snapshot.get("imgUrl").toString());
+                        if(snapshot.contains("name")){
+                            Recipe temprecipe = new Recipe(
+                                    snapshot.get("name").toString(),
+                                    snapshot.get("time").toString(),
+                                    snapshot.get("ingrediens").toString(),
+                                    snapshot.get("instruction").toString(),
+                                    snapshot.get("description").toString(),
+                                    snapshot.get("imgUrl").toString());
 
-                        temprecipe.setUid(snapshot.getId());
-                        todaysRecipe.setValue(temprecipe);
-                        Log.d(Constants.FIREBASE, "DocumentSnapshot successfully fetched!");
+                            temprecipe.setUid(snapshot.getId());
+                            todaysRecipe.setValue(temprecipe);
+                            Log.d(Constants.FIREBASE, "DocumentSnapshot successfully fetched!");
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

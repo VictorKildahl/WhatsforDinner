@@ -95,13 +95,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        
-        /*if(currentUser == null){
-            hvm.getUser();
-        } else {
-            hvm.checkIfNewDay();
-        }*/
-        //hvm.checkIfNewDay();
         hvm.getUser();
         updateUI();
 
