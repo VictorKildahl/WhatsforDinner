@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dk.au.mad21spring.project.au600963">
+    package="dk.au.mad21spring.project.group13">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -34,15 +34,15 @@
             android:value="@string/google_maps_key" />
 
         <service
-            android:name=".service.ForegroundService"
+            android:name="dk.au.mad21spring.project.group13.service.ForegroundService"
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".activities.MapsActivity" />
-        <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.ListActivity" />
-        <activity android:name=".activities.DetailsActivity" />
-        <activity android:name=".activities.SignInActivity">
+        <activity android:name="dk.au.mad21spring.project.group13.activities.MapsActivity" />
+        <activity android:name="dk.au.mad21spring.project.group13.activities.HomeActivity" />
+        <activity android:name="dk.au.mad21spring.project.group13.activities.ListActivity" />
+        <activity android:name="dk.au.mad21spring.project.group13.activities.DetailsActivity" />
+        <activity android:name="dk.au.mad21spring.project.group13.activities.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
