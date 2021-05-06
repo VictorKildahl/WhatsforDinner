@@ -23,4 +23,5 @@
     <string name="txtRecipe">Opskrift</string>
     <string name="txtRecipe1">Dagens aftensmad kan ikke vises.</string>
     <string name="txtRecipe2">Der er ikke nogle opskrifter på denne bruger.</string>
+    <string name="txtNotloggedin">Man skal være logged ind før man kan bruge appen.</string>
 </resources>

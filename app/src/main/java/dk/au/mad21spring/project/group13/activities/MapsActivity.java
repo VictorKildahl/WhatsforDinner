@@ -252,9 +252,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                if(location != null){
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+                }
             }
         });
     };
@@ -262,8 +264,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Code from TheArnieExerciseFinder code demo, L9 Sensors, Location and Maps
     //Method for finding nearby shops by their latitude and longitude
     private void showNearbyShops(){
-
-        //showingExercises = true;
         if(nearbyShopLocations!=null && nearbyShopLocations.size()>0){
 
             NearbyShopLocation tempLocation;

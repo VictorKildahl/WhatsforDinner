@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -34,6 +35,7 @@ public class SignInActivity extends AppCompatActivity {
 
     //Ui widgets and variables
     private Button btnSignIn;
+    private TextView txtNotloggedin;
     private FirebaseAuth auth;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -41,6 +43,8 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        txtNotloggedin = findViewById(R.id.txtNotloggedin);
+        txtNotloggedin.setText(getResources().getString(R.string.txtNotloggedin));
 
         auth = FirebaseAuth.getInstance();
 
@@ -56,6 +60,10 @@ public class SignInActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.home:
+                        return true;
+                    case R.id.recipes:
+                        return true;
+                    case R.id.map:
                         return true;
                 }
                 return false;
