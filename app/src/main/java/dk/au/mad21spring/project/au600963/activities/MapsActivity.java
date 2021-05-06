@@ -45,8 +45,6 @@ import dk.au.mad21spring.project.au600963.constants.Constants;
 //  https://www.youtube.com/watch?v=4eWoXPSpA5Y&list=PLdHg5T0SNpN3GBUmpGqjiKGMcBaRT2A-m&index=2         // Request Location Updates
 //  https://www.youtube.com/watch?v=GT-Br9iIqC0&list=PLdHg5T0SNpN3GBUmpGqjiKGMcBaRT2A-m&index=3         // Google Map
 //  https://www.youtube.com/watch?v=mBOCAHsGkzs&list=PLdHg5T0SNpN3GBUmpGqjiKGMcBaRT2A-m&index=6         // Get user location in maps
-
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.

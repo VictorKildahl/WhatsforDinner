@@ -52,8 +52,10 @@ import dk.au.mad21spring.project.au600963.model.User;
 import dk.au.mad21spring.project.au600963.model.randomrecipe.RandomRecipe;
 import dk.au.mad21spring.project.au600963.model.recipe.Result;
 
+//Code is inspired by lecture 10 - Firebase
 public class Repository {
 
+    //Variables
     public MutableLiveData<List<Recipe>> recipes;
     private MutableLiveData<Recipe> currentRecipe = new MutableLiveData<>();
     private MutableLiveData<Recipe> todaysRecipe = new MutableLiveData<>();
