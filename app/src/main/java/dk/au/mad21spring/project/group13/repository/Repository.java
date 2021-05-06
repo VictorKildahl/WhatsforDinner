@@ -51,6 +51,7 @@ public class Repository {
     private MutableLiveData<Recipe> todaysRecipe = new MutableLiveData<>();
     private MutableLiveData<User> currentUser = new MutableLiveData<>();
     private static Repository instance;
+    private FirebaseAuth auth;
     private ExecutorService executor;           //for async processing
     private RequestQueue queue;
     private Context context;
@@ -197,7 +198,7 @@ public class Repository {
                             }
                         });
 
-                Toast.makeText(context, "The recipe has been added to the list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, result.getResults().get(0).getTitle() + " has been added to the list", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -306,6 +307,8 @@ public class Repository {
                             Log.w(Constants.FIREBASE, "Error adding document", e);
                         }
                     });
+
+            Toast.makeText(context, randomresult.getRecipes().get(0).getTitle() + " has been added to the list", Toast.LENGTH_SHORT).show();
         }
     }
     /////////////Random recipe end//////////////
