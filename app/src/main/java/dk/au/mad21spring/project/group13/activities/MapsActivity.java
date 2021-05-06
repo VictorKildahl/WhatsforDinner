@@ -57,7 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //To get LocationUpdates
     LocationRequest locationRequest;
 
-
     LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
@@ -203,7 +202,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 zoomToUserLocation();
             } else {
                 // permission not granted
-
             }
         }
     }
@@ -232,7 +230,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         showNearbyShops();
-
     }
 
     //enabling userlocation button
@@ -254,12 +251,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSuccess(Location location) {
                 if(location != null){
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
                 }
             }
         });
-    };
+    }
 
     //Code from TheArnieExerciseFinder code demo, L9 Sensors, Location and Maps
     //Method for finding nearby shops by their latitude and longitude
@@ -289,6 +285,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
         }
     }
-
-
 }
