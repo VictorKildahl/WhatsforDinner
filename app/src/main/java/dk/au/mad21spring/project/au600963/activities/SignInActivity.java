@@ -38,6 +38,7 @@ import dk.au.mad21spring.project.au600963.repository.Repository;
 
 //Code is inspired by this article: https://firebase.google.com/docs/auth/android/google-signin
 public class SignInActivity extends AppCompatActivity {
+
     //Ui widgets and variables
     private Button btnSignIn;
     private FirebaseAuth auth;
